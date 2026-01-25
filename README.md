@@ -242,7 +242,38 @@ cp .env.example .env
 
 ## Docker
 
-### Build and Run Locally
+### Docker Compose (Recommended)
+
+Run both PostgreSQL and the app with a single command:
+
+```bash
+# Copy and configure environment
+cp .env.production .env
+nano .env  # Update with secure credentials
+
+# Start all services
+docker compose up -d --build
+
+# View logs
+docker compose logs -f
+
+# Stop services
+docker compose down
+```
+
+### Development Mode
+
+Run only PostgreSQL in Docker, app locally with hot-reload:
+
+```bash
+# Start PostgreSQL
+docker compose -f docker-compose.dev.yml up -d
+
+# Run app locally
+npm run start:dev
+```
+
+### Build and Run Standalone
 
 ```bash
 # Build the image
@@ -258,6 +289,10 @@ docker run -p 3000:3000 \
   -e AUTH_CREDENTIALS=admin:admin123 \
   cp-backend
 ```
+
+## EC2 Deployment
+
+For deploying to AWS EC2 Ubuntu, see [EC2-DEPLOY.md](EC2-DEPLOY.md).
 
 ## AWS ECS Deployment
 

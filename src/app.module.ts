@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ComplaintsModule } from './complaints/complaints.module';
 import { PoliceStationsModule } from './police-stations/police-stations.module';
+import { HealthModule } from './health/health.module';
 import { Complaint } from './complaints/entities/complaint.entity';
 import { ComplaintLog } from './complaints/entities/complaint-log.entity';
 import { PoliceStation } from './police-stations/entities/police-station.entity';
@@ -38,6 +39,7 @@ import { PoliceStation } from './police-stations/entities/police-station.entity'
     AuthModule,
     ComplaintsModule,
     PoliceStationsModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

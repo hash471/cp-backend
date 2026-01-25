@@ -39,6 +39,7 @@ async function bootstrap() {
       },
       'basic',
     )
+    .addTag('health', 'Health check endpoints')
     .addTag('complaints', 'Complaint management endpoints')
     .addTag('police-stations', 'Police station management endpoints')
     .build();
