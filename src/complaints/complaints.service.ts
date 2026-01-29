@@ -398,4 +398,32 @@ export class ComplaintsService {
 
     return result;
   }
+
+  async getStatistics(): Promise<{
+    totalCases: number;
+    pending: number;
+    resolved: number;
+    citizens: number;
+  }> {
+    const statusCounts = await this.getStatusCounts();
+
+    const pending =
+      (statusCounts[ComplaintStatus.NEW] || 0) +
+      (statusCounts[ComplaintStatus.ASSIGNED] || 0) +
+      (statusCounts[ComplaintStatus.IN_PROGRESS] || 0);
+
+    const resolved =
+      (statusCounts[ComplaintStatus.RESOLVED] || 0) +
+      (statusCounts[ComplaintStatus.REJECTED] || 0) +
+      (statusCounts[ComplaintStatus.CLOSED] || 0);
+
+    const totalCases = pending + resolved;
+
+    return {
+      totalCases,
+      pending,
+      resolved,
+      citizens: 0, // Hardcoded for now
+    };
+  }
 }

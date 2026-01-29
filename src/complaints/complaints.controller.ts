@@ -93,6 +93,33 @@ export class ComplaintsController {
     };
   }
 
+  @Get('statistics')
+  @ApiOperation({ summary: 'Get complaint statistics summary' })
+  @ApiResponse({
+    status: 200,
+    description: 'Complaint statistics retrieved successfully',
+    schema: {
+      example: {
+        success: true,
+        data: {
+          totalCases: 100,
+          pending: 40,
+          resolved: 60,
+          citizens: 0,
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getStatistics() {
+    const statistics = await this.complaintsService.getStatistics();
+    return {
+      success: true,
+      data: statistics,
+    };
+  }
+
+
   @Get('by-number/:complaintNumber')
   @ApiOperation({ summary: 'Get a complaint by complaint number' })
   @ApiParam({
