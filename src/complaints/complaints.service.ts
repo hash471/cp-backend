@@ -407,17 +407,21 @@ export class ComplaintsService {
     }
 
     complaint.status = updateStatusDto.status;
+
+    if (updateStatusDto.status === ComplaintStatus.CLOSED_WITH_FIR) {
+      complaint.firNumber = updateStatusDto.firNumber!;
+    }
+
     await this.complaintRepository.save(complaint);
 
     // Create log entry for status change
-    await this.createLog(
-      id,
-      previousStatus,
-      updateStatusDto.status,
+    const remarks =
       updateStatusDto.remarks ||
-        `Status changed from ${previousStatus} to ${updateStatusDto.status}`,
-      officer.name,
-    );
+      (updateStatusDto.firNumber
+        ? `Status changed to ${updateStatusDto.status} — FIR: ${updateStatusDto.firNumber}`
+        : `Status changed from ${previousStatus} to ${updateStatusDto.status}`);
+
+    await this.createLog(id, previousStatus, updateStatusDto.status, remarks, officer.name);
 
     return this.findOneInternal(id);
   }
@@ -484,7 +488,8 @@ export class ComplaintsService {
     const resolved =
       (statusCounts[ComplaintStatus.RESOLVED] || 0) +
       (statusCounts[ComplaintStatus.REJECTED] || 0) +
-      (statusCounts[ComplaintStatus.CLOSED] || 0);
+      (statusCounts[ComplaintStatus.CLOSED_WITH_FIR] || 0) +
+      (statusCounts[ComplaintStatus.CLOSED_WITHOUT_FIR] || 0);
 
     const totalCases = pending + resolved;
 

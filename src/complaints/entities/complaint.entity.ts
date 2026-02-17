@@ -61,6 +61,9 @@ export class Complaint {
   })
   status: ComplaintStatus;
 
+  @Column({ nullable: true })
+  firNumber: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
