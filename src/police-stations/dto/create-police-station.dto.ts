@@ -5,6 +5,9 @@ import {
   IsNumber,
   IsBoolean,
   IsEnum,
+  IsArray,
+  ArrayNotEmpty,
+  Matches,
   Min,
   Max,
 } from 'class-validator';
@@ -118,6 +121,17 @@ export class CreatePoliceStationDto {
   @IsOptional()
   @IsEnum(SubDivision)
   subDivision?: SubDivision;
+
+  @ApiPropertyOptional({
+    description: 'List of 6-digit pincodes served by this station',
+    example: ['530001', '530002'],
+    type: [String],
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @Matches(/^[0-9]{6}$/, { each: true, message: 'Each pincode must be 6 digits' })
+  servicePincodes?: string[];
 
   @ApiPropertyOptional({
     description: 'Whether the station is active',

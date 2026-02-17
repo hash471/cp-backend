@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Complaint } from './entities/complaint.entity';
 import { ComplaintLog } from './entities/complaint-log.entity';
+import { PoliceStation } from '../police-stations/entities/police-station.entity';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
 import { UpdateComplaintDto } from './dto/update-complaint.dto';
 import { FilterComplaintDto } from './dto/filter-complaint.dto';
@@ -16,10 +17,15 @@ import { UpdateStatusDto } from './dto/update-status.dto';
 import { ComplaintStatus } from './enums/complaint-status.enum';
 import { Officer } from '../officers/entities/officer.entity';
 import { Role } from '../officers/enums/role.enum';
-import {
-  getStationsForZone,
-  getStationsForSubDivision,
-} from '../officers/constants/hierarchy.constant';
+import { getAccessibleStationsForOfficer } from '../officers/constants/relations.constant';
+
+const MISCELLANEOUS_STATION = 'MISCELLANEOUS';
+const MISCELLANEOUS_ROLES: Role[] = [
+  Role.COMMISSIONER,
+  Role.JOINT_COMMISSIONER,
+  Role.DCP,
+  Role.ACP,
+];
 
 @Injectable()
 export class ComplaintsService {
@@ -28,27 +34,33 @@ export class ComplaintsService {
     private readonly complaintRepository: Repository<Complaint>,
     @InjectRepository(ComplaintLog)
     private readonly complaintLogRepository: Repository<ComplaintLog>,
+    @InjectRepository(PoliceStation)
+    private readonly policeStationRepository: Repository<PoliceStation>,
     private readonly configService: ConfigService,
   ) {}
 
   private getAllowedStations(officer: Officer): string[] | null {
-    switch (officer.role) {
-      case Role.COMMISSIONER:
-      case Role.JOINT_COMMISSIONER:
-        return null; // null means all stations
-      case Role.DCP:
-        if (!officer.zone) return [];
-        return getStationsForZone(officer.zone);
-      case Role.ACP:
-        if (!officer.subDivision) return [];
-        return getStationsForSubDivision(officer.subDivision);
-      case Role.INSPECTOR:
-      case Role.SUB_INSPECTOR:
-        if (!officer.policeStation) return [];
-        return [officer.policeStation];
-      default:
-        return [];
+    // Primary: use relations hierarchy if officer username is registered
+    const relationsStations = getAccessibleStationsForOfficer(officer.username);
+
+    let stations: string[] | null;
+    if (relationsStations !== null) {
+      stations = relationsStations.length > 0 ? relationsStations : null;
+    } else if (officer.policeStation) {
+      // Fallback: officer policeStation field (for SIs / leaf officers not in the map)
+      stations = [officer.policeStation];
+    } else {
+      stations = []; // no access
     }
+
+    // COMM, JCP, DCP, ACP cadres can also see MISCELLANEOUS complaints.
+    // When stations === null the filter is skipped (full access), so MISCELLANEOUS
+    // is already visible; we only need to add it when a restricted list is returned.
+    if (stations !== null && MISCELLANEOUS_ROLES.includes(officer.role)) {
+      stations = [...stations, MISCELLANEOUS_STATION];
+    }
+
+    return stations;
   }
 
   private applyRbacFilter(
@@ -80,9 +92,34 @@ export class ComplaintsService {
   }
 
   async create(
-    createComplaintDto: CreateComplaintDto
+    createComplaintDto: CreateComplaintDto,
   ): Promise<{ complaint: Complaint; trackingUrl: string }> {
-    const complaint = this.complaintRepository.create(createComplaintDto);
+    const dto = { ...createComplaintDto };
+
+    // Auto-assign policeStation from pincode if not explicitly provided
+    if (!dto.policeStation) {
+      if (dto.pincode) {
+        const allActiveStations = await this.policeStationRepository.find({
+          where: { isActive: true },
+          select: ['id', 'name', 'servicePincodes'],
+        });
+
+        const matchedStation = allActiveStations.find(
+          (s) => Array.isArray(s.servicePincodes) && s.servicePincodes.includes(dto.pincode!),
+        );
+
+        if (matchedStation) {
+          dto.policeStation = matchedStation.name;
+        }
+      }
+
+      // No pincode provided, or pincode didn't match any station → MISCELLANEOUS
+      if (!dto.policeStation) {
+        dto.policeStation = MISCELLANEOUS_STATION;
+      }
+    }
+
+    const complaint = this.complaintRepository.create(dto);
     const savedComplaint = await this.complaintRepository.save(complaint);
 
     // Create initial log entry
@@ -453,7 +490,7 @@ export class ComplaintsService {
       .select('complaint.status', 'status')
       .addSelect('COUNT(*)', 'count');
 
-    // this.applyRbacFilter(queryBuilder, officer);
+    this.applyRbacFilter(queryBuilder, officer);
 
     const counts = await queryBuilder.groupBy('complaint.status').getRawMany();
 

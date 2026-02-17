@@ -23,6 +23,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_1,
     subDivision: SubDivision.EAST,
     isActive: true,
+    servicePincodes: ["530002", "530007"],
   },
   {
     code: "VZG-MRP",
@@ -39,6 +40,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_1,
     subDivision: SubDivision.EAST,
     isActive: true,
+    servicePincodes: ["530020"],
   },
   {
     code: "VZG-03",
@@ -55,6 +57,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_1,
     subDivision: SubDivision.EAST,
     isActive: true,
+    servicePincodes: ["530003", "530014"],
   },
   {
     code: "VZG-04",
@@ -71,12 +74,13 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_1,
     subDivision: SubDivision.EAST,
     isActive: true,
+    servicePincodes: ["530004"],
   },
 
   // ZONE_1 → Dwaraka Sub-Division
   {
     code: "VZG-DWK",
-    name: "Dwaraka",
+    name: "Dwaraka Nagar",
     address: "Dwaraka Nagar, Visakhapatnam",
     district: 'Visakhapatnam',
     city: 'Visakhapatnam',
@@ -89,6 +93,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_1,
     subDivision: SubDivision.DWARAKA,
     isActive: true,
+    servicePincodes: ["530016", "530039"],
   },
   {
     code: "VZG-MVP",
@@ -105,6 +110,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_1,
     subDivision: SubDivision.DWARAKA,
     isActive: true,
+    servicePincodes: ["530017"],
   },
   {
     code: "VZG-ARL",
@@ -121,6 +127,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_1,
     subDivision: SubDivision.DWARAKA,
     isActive: true,
+    servicePincodes: ["530040", "530029"],
   },
 
   // ZONE_1 → North Sub-Division
@@ -139,6 +146,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_1,
     subDivision: SubDivision.NORTH,
     isActive: true,
+    servicePincodes: ["530041"],
   },
   {
     code: "VZG-BHM",
@@ -155,6 +163,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_1,
     subDivision: SubDivision.NORTH,
     isActive: true,
+    servicePincodes: ["531163"],
   },
   {
     code: "VZG-ANP",
@@ -171,6 +180,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_1,
     subDivision: SubDivision.NORTH,
     isActive: true,
+    servicePincodes: ["531173"],
   },
   {
     code: "VZG-PDN",
@@ -187,6 +197,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_1,
     subDivision: SubDivision.NORTH,
     isActive: true,
+    servicePincodes: ["531219"],
   },
 
   // ZONE_2 → Harbour Sub-Division
@@ -205,6 +216,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_2,
     subDivision: SubDivision.HARBOUR,
     isActive: true,
+    servicePincodes: ["530035"],
   },
   {
     code: "VZG-01",
@@ -221,6 +233,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_2,
     subDivision: SubDivision.HARBOUR,
     isActive: true,
+    servicePincodes: ["530001", "530012"],
   },
   {
     code: "VZG-MLK",
@@ -237,6 +250,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_2,
     subDivision: SubDivision.HARBOUR,
     isActive: true,
+    servicePincodes: ["530011", "530013"],
   },
   {
     code: "VZG-NPT",
@@ -253,6 +267,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_2,
     subDivision: SubDivision.HARBOUR,
     isActive: true,
+    servicePincodes: ["530031"],
   },
 
   // ZONE_2 → South Sub-Division
@@ -271,6 +286,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_2,
     subDivision: SubDivision.SOUTH,
     isActive: true,
+    servicePincodes: ["530026", "530045"],
   },
   {
     code: "VZG-DVD",
@@ -287,6 +303,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_2,
     subDivision: SubDivision.SOUTH,
     isActive: true,
+    servicePincodes: ["530046", "530048"],
   },
   {
     code: "VZG-STL",
@@ -303,6 +320,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_2,
     subDivision: SubDivision.SOUTH,
     isActive: true,
+    servicePincodes: ["530032", "530023"],
   },
 
   // ZONE_2 → West Sub-Division
@@ -321,6 +339,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_2,
     subDivision: SubDivision.WEST,
     isActive: true,
+    servicePincodes: ["530008"],
   },
   {
     code: "VZG-AIR",
@@ -337,6 +356,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_2,
     subDivision: SubDivision.WEST,
     isActive: true,
+    servicePincodes: ["530009", "530022"],
   },
   {
     code: "VZG-GPL",
@@ -353,6 +373,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_2,
     subDivision: SubDivision.WEST,
     isActive: true,
+    servicePincodes: ["530027", "530028"],
   },
   {
     code: "VZG-PND",
@@ -369,10 +390,11 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     zone: Zone.ZONE_2,
     subDivision: SubDivision.WEST,
     isActive: true,
+    servicePincodes: ["531002"],
   },
 
   // ==========================================
-  // Traffic Police Stations
+  // Traffic Police Stations (no servicePincodes — complaints go to L&O)
   // ==========================================
   // ZONE_1 → East Sub-Division
   {

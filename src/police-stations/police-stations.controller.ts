@@ -18,13 +18,13 @@ import {
   ApiResponse,
   ApiParam,
   ApiQuery,
-  ApiBasicAuth,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { PoliceStationsService } from './police-stations.service';
 import { CreatePoliceStationDto } from './dto/create-police-station.dto';
 import { UpdatePoliceStationDto } from './dto/update-police-station.dto';
 import { FilterPoliceStationDto } from './dto/filter-police-station.dto';
-import { Base64AuthGuard } from '../auth/guards/base64-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('police-stations')
 @Controller('police-stations')
@@ -32,8 +32,8 @@ export class PoliceStationsController {
   constructor(private readonly policeStationsService: PoliceStationsService) {}
 
   @Post()
-  @UseGuards(Base64AuthGuard)
-  @ApiBasicAuth('basic')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Create a new police station' })
   @ApiResponse({
     status: 201,
@@ -149,8 +149,8 @@ export class PoliceStationsController {
   }
 
   @Patch(':id')
-  @UseGuards(Base64AuthGuard)
-  @ApiBasicAuth('basic')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update a police station' })
   @ApiParam({ name: 'id', description: 'Police station UUID' })
   @ApiResponse({
@@ -176,8 +176,8 @@ export class PoliceStationsController {
   }
 
   @Delete(':id')
-  @UseGuards(Base64AuthGuard)
-  @ApiBasicAuth('basic')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete a police station' })
   @ApiParam({ name: 'id', description: 'Police station UUID' })

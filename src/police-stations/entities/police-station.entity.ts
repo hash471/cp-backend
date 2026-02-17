@@ -47,6 +47,25 @@ export class PoliceStation {
   @Column({ type: 'varchar', default: StationType.LAW_AND_ORDER })
   type: StationType;
 
+  @Column({
+    type: 'text',
+    nullable: true,
+    transformer: {
+      to: (value: string[] | null | undefined): string | null =>
+        value && value.length > 0 ? JSON.stringify(value) : null,
+      from: (value: string | null): string[] => {
+        if (!value) return [];
+        try {
+          const parsed = JSON.parse(value);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      },
+    },
+  })
+  servicePincodes: string[];
+
   @Column({ type: 'varchar', nullable: true })
   zone: Zone | null;
 
