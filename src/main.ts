@@ -35,13 +35,24 @@ async function bootstrap() {
       {
         type: 'http',
         scheme: 'basic',
-        description: 'Enter username and password (e.g., admin:admin123)',
+        description: 'Enter username:password for complaint creation',
       },
       'basic',
     )
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Enter JWT token from /api/auth/login',
+      },
+      'bearer',
+    )
+    .addTag('auth', 'Authentication endpoints')
     .addTag('health', 'Health check endpoints')
     .addTag('complaints', 'Complaint management endpoints')
     .addTag('police-stations', 'Police station management endpoints')
+    .addTag('officers', 'Officer management endpoints')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

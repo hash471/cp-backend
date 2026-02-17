@@ -1,13 +1,13 @@
 import {
   IsString,
-  IsNotEmpty,
   IsOptional,
   IsEnum,
   Length,
   Matches,
 } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ComplaintStatus } from '../enums/complaint-status.enum';
+import { Gender } from '../enums/gender.enum';
 
 export class CreateComplaintDto {
   @ApiPropertyOptional({
@@ -18,31 +18,40 @@ export class CreateComplaintDto {
   @IsString()
   language?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Name or code of the police station',
     example: 'I Town Police Station',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  policeStation: string;
+  policeStation?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Full name of the citizen filing the complaint',
     example: 'John Doe',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  citizenName: string;
+  citizenName?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: '10-digit mobile number',
     example: '9876543210',
     pattern: '^[0-9]{10}$',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   @Matches(/^[0-9]{10}$/, { message: 'Mobile number must be 10 digits' })
-  mobileNumber: string;
+  mobileNumber?: string;
+
+  @ApiPropertyOptional({
+    description: 'Gender of the complainant',
+    enum: Gender,
+    example: Gender.MALE,
+  })
+  @IsOptional()
+  @IsEnum(Gender)
+  gender?: Gender;
 
   @ApiPropertyOptional({
     description: '12-digit Aadhar number',
@@ -89,21 +98,21 @@ export class CreateComplaintDto {
   @Matches(/^[0-9]{6}$/, { message: 'Pincode must be 6 digits' })
   pincode?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Location where the incident occurred',
     example: 'MG Road Junction, near City Mall',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  locationOfIncident: string;
+  locationOfIncident?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Detailed summary of the complaint',
     example: 'Theft of mobile phone at bus stop around 3 PM',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  complaintSummary: string;
+  complaintSummary?: string;
 
   @ApiPropertyOptional({
     description: 'Initial status of the complaint',

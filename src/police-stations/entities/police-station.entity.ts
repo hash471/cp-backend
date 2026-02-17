@@ -5,6 +5,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Zone } from '../../officers/enums/zone.enum';
+import { SubDivision } from '../../officers/enums/sub-division.enum';
+import { StationType } from '../enums/station-type.enum';
 
 @Entity('police_stations')
 export class PoliceStation {
@@ -40,6 +43,15 @@ export class PoliceStation {
 
   @Column({ type: 'decimal', precision: 11, scale: 8, nullable: true })
   longitude: number;
+
+  @Column({ type: 'varchar', default: StationType.LAW_AND_ORDER })
+  type: StationType;
+
+  @Column({ type: 'varchar', nullable: true })
+  zone: Zone | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  subDivision: SubDivision | null;
 
   @Column({ default: true })
   isActive: boolean;

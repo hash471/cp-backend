@@ -54,18 +54,17 @@ export class PoliceStationsController {
 
   @Get()
   @ApiOperation({
-    summary: 'Get all police stations with optional filtering',
+    summary: 'Get all police stations with filtering, search, sort, and pagination',
   })
   @ApiResponse({
     status: 200,
     description: 'List of police stations retrieved successfully',
   })
   async findAll(@Query() filterDto: FilterPoliceStationDto) {
-    const stations = await this.policeStationsService.findAll(filterDto);
+    const result = await this.policeStationsService.findAll(filterDto);
     return {
       success: true,
-      data: stations,
-      total: stations.length,
+      ...result,
     };
   }
 

@@ -5,35 +5,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Request } from 'express';
 
 @Injectable()
 export class Base64AuthGuard implements CanActivate {
-  private readonly validCredentials: Map<string, string>;
-
-  constructor(private readonly configService: ConfigService) {
-    this.validCredentials = this.loadCredentials();
-  }
-
-  private loadCredentials(): Map<string, string> {
-    const credentials = new Map<string, string>();
-    const credentialsStr = this.configService.get<string>(
-      'AUTH_CREDENTIALS',
-      'admin:admin123,officer:officer123',
-    );
-
-    credentialsStr.split(',').forEach((pair) => {
-      const [username, password] = pair.trim().split(':');
-      if (username && password) {
-        credentials.set(username, password);
-      }
-    });
-
-    return credentials;
-  }
+  constructor(private readonly configService: ConfigService) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context.switchToHttp().getRequest();
     const authHeader = request.headers.authorization;
 
     if (!authHeader) {
@@ -55,22 +33,28 @@ export class Base64AuthGuard implements CanActivate {
       throw new UnauthorizedException('Invalid Base64 encoding');
     }
 
-    const [username, password] = decoded.split(':');
-
-    if (!username || !password) {
+    const colonIndex = decoded.indexOf(':');
+    if (colonIndex === -1) {
       throw new UnauthorizedException(
         'Invalid credentials format. Expected username:password',
       );
     }
 
-    const storedPassword = this.validCredentials.get(username);
+    const username = decoded.substring(0, colonIndex);
+    const password = decoded.substring(colonIndex + 1);
 
-    if (!storedPassword || storedPassword !== password) {
-      throw new UnauthorizedException('Invalid username or password');
+    const expectedUsername = this.configService.get<string>(
+      'COMPLAINT_API_USERNAME',
+      'admin',
+    );
+    const expectedPassword = this.configService.get<string>(
+      'COMPLAINT_API_PASSWORD',
+      'admin123',
+    );
+
+    if (username !== expectedUsername || password !== expectedPassword) {
+      throw new UnauthorizedException('Invalid credentials');
     }
-
-    // Attach user info to request for later use
-    (request as any).user = { username };
 
     return true;
   }

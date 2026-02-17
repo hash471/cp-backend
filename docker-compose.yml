@@ -39,7 +39,6 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-postgres}
       DB_DATABASE: ${DB_DATABASE:-complaints}
       DB_SSL: "false"
-      AUTH_CREDENTIALS: ${AUTH_CREDENTIALS:-admin:admin123,officer:officer123}
     ports:
       - "3000:3000"
     healthcheck:

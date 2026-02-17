@@ -18,8 +18,8 @@ import {
   ApiOperation,
   ApiResponse,
   ApiParam,
-  ApiBearerAuth,
   ApiBasicAuth,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ComplaintsService } from './complaints.service';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
@@ -27,20 +27,21 @@ import { UpdateComplaintDto } from './dto/update-complaint.dto';
 import { FilterComplaintDto } from './dto/filter-complaint.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { Base64AuthGuard } from '../auth/guards/base64-auth.guard';
-import { Request } from 'express';
-
-interface AuthenticatedRequest extends Request {
-  user?: { username: string };
-}
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Officer } from '../officers/entities/officer.entity';
 
 @ApiTags('complaints')
-@ApiBasicAuth('basic')
 @Controller('complaints')
-@UseGuards(Base64AuthGuard)
 export class ComplaintsController {
   constructor(private readonly complaintsService: ComplaintsService) {}
 
+  private getOfficer(req: any): Officer {
+    return req.user as Officer;
+  }
+
   @Post()
+  @UseGuards(Base64AuthGuard)
+  @ApiBasicAuth('basic')
   @ApiOperation({ summary: 'Create a new complaint' })
   @ApiResponse({
     status: 201,
@@ -50,28 +51,35 @@ export class ComplaintsController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async create(
     @Body() createComplaintDto: CreateComplaintDto,
-    @Req() req: AuthenticatedRequest,
   ) {
-    const complaint = await this.complaintsService.create(
-      createComplaintDto,
-      req.user?.username,
+    const { complaint, trackingUrl } = await this.complaintsService.create(
+      createComplaintDto
     );
     return {
       success: true,
       message: 'Complaint created successfully',
       data: complaint,
+      trackingUrl,
     };
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get all complaints with filtering and pagination' })
   @ApiResponse({
     status: 200,
     description: 'List of complaints retrieved successfully',
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async findAll(@Query() filterDto: FilterComplaintDto) {
-    const result = await this.complaintsService.findAll(filterDto);
+  async findAll(
+    @Query() filterDto: FilterComplaintDto,
+    @Req() req: any,
+  ) {
+    const result = await this.complaintsService.findAll(
+      filterDto,
+      this.getOfficer(req),
+    );
     return {
       success: true,
       ...result,
@@ -79,14 +87,18 @@ export class ComplaintsController {
   }
 
   @Get('stats')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get complaint statistics by status' })
   @ApiResponse({
     status: 200,
     description: 'Complaint statistics retrieved successfully',
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getStats() {
-    const counts = await this.complaintsService.getStatusCounts();
+  async getStats(@Req() req: any) {
+    const counts = await this.complaintsService.getStatusCounts(
+      this.getOfficer(req),
+    );
     return {
       success: true,
       data: counts,
@@ -94,6 +106,8 @@ export class ComplaintsController {
   }
 
   @Get('statistics')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get complaint statistics summary' })
   @ApiResponse({
     status: 200,
@@ -111,16 +125,60 @@ export class ComplaintsController {
     },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getStatistics() {
-    const statistics = await this.complaintsService.getStatistics();
+  async getStatistics(@Req() req: any) {
+    const statistics = await this.complaintsService.getStatistics(
+      this.getOfficer(req),
+    );
     return {
       success: true,
       data: statistics,
     };
   }
 
+  @Get('track/:complaintNumber')
+  @ApiOperation({ summary: 'Track complaint status by complaint number (public)' })
+  @ApiParam({
+    name: 'complaintNumber',
+    description: 'The complaint number (e.g., CP-ABC123-XYZ)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Complaint status retrieved',
+    schema: {
+      example: {
+        success: true,
+        data: {
+          complaintNumber: 'CP-ABC123-XYZ',
+          status: 'PENDING',
+          policeStation: 'II Town',
+          createdAt: '2026-02-15T10:00:00.000Z',
+          logs: [
+            {
+              previousStatus: null,
+              newStatus: 'PENDING',
+              remarks: null,
+              changeDescription: 'Complaint created',
+              createdAt: '2026-02-15T10:00:00.000Z',
+            },
+          ],
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Complaint not found' })
+  async trackComplaint(
+    @Param('complaintNumber') complaintNumber: string,
+  ) {
+    const complaint = await this.complaintsService.trackByComplaintNumber(complaintNumber);
+    return {
+      success: true,
+      data: complaint,
+    };
+  }
 
   @Get('by-number/:complaintNumber')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get a complaint by complaint number' })
   @ApiParam({
     name: 'complaintNumber',
@@ -131,9 +189,12 @@ export class ComplaintsController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findByComplaintNumber(
     @Param('complaintNumber') complaintNumber: string,
+    @Req() req: any,
   ) {
-    const complaint =
-      await this.complaintsService.findByComplaintNumber(complaintNumber);
+    const complaint = await this.complaintsService.findByComplaintNumber(
+      complaintNumber,
+      this.getOfficer(req),
+    );
     return {
       success: true,
       data: complaint,
@@ -141,13 +202,21 @@ export class ComplaintsController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get a complaint by ID' })
   @ApiParam({ name: 'id', description: 'Complaint UUID' })
   @ApiResponse({ status: 200, description: 'Complaint found' })
   @ApiResponse({ status: 404, description: 'Complaint not found' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    const complaint = await this.complaintsService.findOne(id);
+  async findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: any,
+  ) {
+    const complaint = await this.complaintsService.findOne(
+      id,
+      this.getOfficer(req),
+    );
     return {
       success: true,
       data: complaint,
@@ -155,6 +224,8 @@ export class ComplaintsController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update a complaint' })
   @ApiParam({ name: 'id', description: 'Complaint UUID' })
   @ApiResponse({ status: 200, description: 'Complaint updated successfully' })
@@ -164,12 +235,12 @@ export class ComplaintsController {
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateComplaintDto: UpdateComplaintDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: any,
   ) {
     const complaint = await this.complaintsService.update(
       id,
       updateComplaintDto,
-      req.user?.username,
+      this.getOfficer(req),
     );
     return {
       success: true,
@@ -179,6 +250,8 @@ export class ComplaintsController {
   }
 
   @Patch(':id/status')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Update complaint status' })
   @ApiParam({ name: 'id', description: 'Complaint UUID' })
   @ApiResponse({ status: 200, description: 'Status updated successfully' })
@@ -188,12 +261,12 @@ export class ComplaintsController {
   async updateStatus(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateStatusDto: UpdateStatusDto,
-    @Req() req: AuthenticatedRequest,
+    @Req() req: any,
   ) {
     const complaint = await this.complaintsService.updateStatus(
       id,
       updateStatusDto,
-      req.user?.username,
+      this.getOfficer(req),
     );
     return {
       success: true,
@@ -203,13 +276,21 @@ export class ComplaintsController {
   }
 
   @Get(':id/logs')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get all audit logs for a complaint' })
   @ApiParam({ name: 'id', description: 'Complaint UUID' })
   @ApiResponse({ status: 200, description: 'Logs retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Complaint not found' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getLogs(@Param('id', ParseUUIDPipe) id: string) {
-    const logs = await this.complaintsService.getLogs(id);
+  async getLogs(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: any,
+  ) {
+    const logs = await this.complaintsService.getLogs(
+      id,
+      this.getOfficer(req),
+    );
     return {
       success: true,
       data: logs,
@@ -217,14 +298,19 @@ export class ComplaintsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Delete a complaint' })
   @ApiParam({ name: 'id', description: 'Complaint UUID' })
   @ApiResponse({ status: 200, description: 'Complaint deleted successfully' })
   @ApiResponse({ status: 404, description: 'Complaint not found' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async remove(@Param('id', ParseUUIDPipe) id: string) {
-    await this.complaintsService.remove(id);
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: any,
+  ) {
+    await this.complaintsService.remove(id, this.getOfficer(req));
     return {
       success: true,
       message: 'Complaint deleted successfully',

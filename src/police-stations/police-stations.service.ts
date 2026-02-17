@@ -22,19 +22,50 @@ export class PoliceStationsService {
     return this.policeStationRepository.save(policeStation);
   }
 
-  async findAll(filterDto: FilterPoliceStationDto): Promise<PoliceStation[]> {
-    const { search, district, city, isActive, nearLatitude, nearLongitude, radiusKm } =
-      filterDto;
+  async findAll(filterDto: FilterPoliceStationDto): Promise<{
+    data: PoliceStation[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
+    const {
+      search,
+      zone,
+      subDivision,
+      type,
+      district,
+      city,
+      isActive,
+      nearLatitude,
+      nearLongitude,
+      radiusKm,
+      sortBy = 'name',
+      sortOrder = 'ASC',
+      page = 1,
+      limit = 10,
+    } = filterDto;
 
     const queryBuilder = this.policeStationRepository
-      .createQueryBuilder('station')
-      .orderBy('station.name', 'ASC');
+      .createQueryBuilder('station');
 
     if (search) {
       queryBuilder.andWhere(
         '(station.name ILIKE :search OR station.code ILIKE :search OR station.address ILIKE :search)',
         { search: `%${search}%` },
       );
+    }
+
+    if (zone) {
+      queryBuilder.andWhere('station.zone = :zone', { zone });
+    }
+
+    if (subDivision) {
+      queryBuilder.andWhere('station.subDivision = :subDivision', { subDivision });
+    }
+
+    if (type) {
+      queryBuilder.andWhere('station.type = :type', { type });
     }
 
     if (district) {
@@ -55,7 +86,6 @@ export class PoliceStationsService {
 
     // If coordinates provided, calculate distance and optionally filter by radius
     if (nearLatitude !== undefined && nearLongitude !== undefined) {
-      // Haversine formula for distance calculation in PostgreSQL
       queryBuilder.addSelect(
         `(6371 * acos(cos(radians(:lat)) * cos(radians(station.latitude)) * cos(radians(station.longitude) - radians(:lng)) + sin(radians(:lat)) * sin(radians(station.latitude))))`,
         'distance',
@@ -71,9 +101,29 @@ export class PoliceStationsService {
       }
 
       queryBuilder.orderBy('distance', 'ASC');
+    } else {
+      const allowedSortFields = ['name', 'code', 'zone', 'subDivision', 'type', 'createdAt'];
+      const validSortBy = allowedSortFields.includes(sortBy) ? sortBy : 'name';
+      const validSortOrder = sortOrder === 'DESC' ? 'DESC' : 'ASC';
+      queryBuilder.orderBy(`station.${validSortBy}`, validSortOrder);
     }
 
-    return queryBuilder.getMany();
+    // Pagination
+    const pageNum = Math.max(1, Number(page));
+    const limitNum = Math.min(100, Math.max(1, Number(limit)));
+    const skip = (pageNum - 1) * limitNum;
+
+    queryBuilder.skip(skip).take(limitNum);
+
+    const [data, total] = await queryBuilder.getManyAndCount();
+
+    return {
+      data,
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum),
+    };
   }
 
   async findOne(id: string): Promise<PoliceStation> {

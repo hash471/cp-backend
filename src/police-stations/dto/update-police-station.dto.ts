@@ -3,9 +3,12 @@ import {
   IsOptional,
   IsNumber,
   IsBoolean,
+  IsEnum,
   Min,
   Max,
 } from 'class-validator';
+import { Zone } from '../../officers/enums/zone.enum';
+import { SubDivision } from '../../officers/enums/sub-division.enum';
 
 export class UpdatePoliceStationDto {
   @IsOptional()
@@ -51,6 +54,14 @@ export class UpdatePoliceStationDto {
   @Min(-180)
   @Max(180)
   longitude?: number;
+
+  @IsOptional()
+  @IsEnum(Zone)
+  zone?: Zone;
+
+  @IsOptional()
+  @IsEnum(SubDivision)
+  subDivision?: SubDivision;
 
   @IsOptional()
   @IsBoolean()

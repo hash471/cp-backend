@@ -4,10 +4,13 @@ import {
   IsOptional,
   IsNumber,
   IsBoolean,
+  IsEnum,
   Min,
   Max,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Zone } from '../../officers/enums/zone.enum';
+import { SubDivision } from '../../officers/enums/sub-division.enum';
 
 export class CreatePoliceStationDto {
   @ApiProperty({
@@ -97,6 +100,24 @@ export class CreatePoliceStationDto {
   @Min(-180)
   @Max(180)
   longitude?: number;
+
+  @ApiPropertyOptional({
+    description: 'Zone the station belongs to',
+    enum: Zone,
+    example: Zone.ZONE_1,
+  })
+  @IsOptional()
+  @IsEnum(Zone)
+  zone?: Zone;
+
+  @ApiPropertyOptional({
+    description: 'Sub-division the station belongs to',
+    enum: SubDivision,
+    example: SubDivision.EAST,
+  })
+  @IsOptional()
+  @IsEnum(SubDivision)
+  subDivision?: SubDivision;
 
   @ApiPropertyOptional({
     description: 'Whether the station is active',

@@ -2,9 +2,11 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, Between, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Complaint } from './entities/complaint.entity';
 import { ComplaintLog } from './entities/complaint-log.entity';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
@@ -12,6 +14,12 @@ import { UpdateComplaintDto } from './dto/update-complaint.dto';
 import { FilterComplaintDto } from './dto/filter-complaint.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { ComplaintStatus } from './enums/complaint-status.enum';
+import { Officer } from '../officers/entities/officer.entity';
+import { Role } from '../officers/enums/role.enum';
+import {
+  getStationsForZone,
+  getStationsForSubDivision,
+} from '../officers/constants/hierarchy.constant';
 
 @Injectable()
 export class ComplaintsService {
@@ -20,12 +28,60 @@ export class ComplaintsService {
     private readonly complaintRepository: Repository<Complaint>,
     @InjectRepository(ComplaintLog)
     private readonly complaintLogRepository: Repository<ComplaintLog>,
+    private readonly configService: ConfigService,
   ) {}
 
+  private getAllowedStations(officer: Officer): string[] | null {
+    switch (officer.role) {
+      case Role.COMMISSIONER:
+      case Role.JOINT_COMMISSIONER:
+        return null; // null means all stations
+      case Role.DCP:
+        if (!officer.zone) return [];
+        return getStationsForZone(officer.zone);
+      case Role.ACP:
+        if (!officer.subDivision) return [];
+        return getStationsForSubDivision(officer.subDivision);
+      case Role.INSPECTOR:
+      case Role.SUB_INSPECTOR:
+        if (!officer.policeStation) return [];
+        return [officer.policeStation];
+      default:
+        return [];
+    }
+  }
+
+  private applyRbacFilter(
+    queryBuilder: SelectQueryBuilder<Complaint>,
+    officer: Officer,
+  ): void {
+    const stations = this.getAllowedStations(officer);
+    if (stations === null) return; // Commissioner / Joint Commissioner
+    if (stations.length === 0) {
+      queryBuilder.andWhere('1 = 0'); // no access
+      return;
+    }
+    queryBuilder.andWhere('complaint.policeStation IN (:...stations)', {
+      stations,
+    });
+  }
+
+  private assertOfficerCanAccess(
+    complaint: Complaint,
+    officer: Officer,
+  ): void {
+    const stations = this.getAllowedStations(officer);
+    if (stations === null) return;
+    if (!stations.includes(complaint.policeStation)) {
+      throw new ForbiddenException(
+        'You do not have access to this complaint',
+      );
+    }
+  }
+
   async create(
-    createComplaintDto: CreateComplaintDto,
-    username?: string,
-  ): Promise<Complaint> {
+    createComplaintDto: CreateComplaintDto
+  ): Promise<{ complaint: Complaint; trackingUrl: string }> {
     const complaint = this.complaintRepository.create(createComplaintDto);
     const savedComplaint = await this.complaintRepository.save(complaint);
 
@@ -35,13 +91,23 @@ export class ComplaintsService {
       null,
       savedComplaint.status,
       'Complaint created',
-      username,
+      'Added by the Reportee',
     );
 
-    return this.findOne(savedComplaint.id);
+    const result = await this.findOneInternal(savedComplaint.id);
+    const baseUrl = this.configService.get<string>(
+      'COMPLAINT_TRACKING_BASE_URL',
+      'https://your-domain.com/complaints/track',
+    );
+    const trackingUrl = `${baseUrl}/${result.complaintNumber}`;
+
+    return { complaint: result, trackingUrl };
   }
 
-  async findAll(filterDto: FilterComplaintDto): Promise<{
+  async findAll(
+    filterDto: FilterComplaintDto,
+    officer: Officer,
+  ): Promise<{
     data: Complaint[];
     total: number;
     page: number;
@@ -74,6 +140,9 @@ export class ComplaintsService {
     const queryBuilder = this.complaintRepository
       .createQueryBuilder('complaint')
       .leftJoinAndSelect('complaint.logs', 'logs');
+
+    // Apply RBAC filter
+    // this.applyRbacFilter(queryBuilder, officer);
 
     // Apply filters
     if (complaintNumber) {
@@ -216,21 +285,45 @@ export class ComplaintsService {
     };
   }
 
-  async findOne(id: string): Promise<Complaint> {
-    const complaint = await this.complaintRepository.findOne({
-      where: { id },
-      relations: ['logs'],
-      order: { logs: { createdAt: 'DESC' } },
-    });
-
-    if (!complaint) {
-      throw new NotFoundException(`Complaint with ID "${id}" not found`);
-    }
-
+  async findOne(id: string, officer: Officer): Promise<Complaint> {
+    const complaint = await this.findOneInternal(id);
+    this.assertOfficerCanAccess(complaint, officer);
     return complaint;
   }
 
-  async findByComplaintNumber(complaintNumber: string): Promise<Complaint> {
+  async trackByComplaintNumber(complaintNumber: string) {
+    const complaint = await this.complaintRepository.findOne({
+      where: { complaintNumber },
+      relations: ['logs'],
+    });
+
+    if (!complaint) {
+      throw new NotFoundException(
+        `Complaint with number "${complaintNumber}" not found`,
+      );
+    }
+
+    return {
+      complaintNumber: complaint.complaintNumber,
+      status: complaint.status,
+      policeStation: complaint.policeStation,
+      createdAt: complaint.createdAt,
+      logs: (complaint.logs || [])
+        .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+        .map((log) => ({
+          previousStatus: log.previousStatus,
+          newStatus: log.newStatus,
+          remarks: log.remarks,
+          changeDescription: log.changeDescription,
+          createdAt: log.createdAt,
+        })),
+    };
+  }
+
+  async findByComplaintNumber(
+    complaintNumber: string,
+    officer: Officer,
+  ): Promise<Complaint> {
     const complaint = await this.complaintRepository.findOne({
       where: { complaintNumber },
       relations: ['logs'],
@@ -243,15 +336,18 @@ export class ComplaintsService {
       );
     }
 
+    this.assertOfficerCanAccess(complaint, officer);
     return complaint;
   }
 
   async update(
     id: string,
     updateComplaintDto: UpdateComplaintDto,
-    username?: string,
+    officer: Officer,
   ): Promise<Complaint> {
-    const complaint = await this.findOne(id);
+    const complaint = await this.findOneInternal(id);
+    this.assertOfficerCanAccess(complaint, officer);
+
     const previousStatus = complaint.status;
 
     // Check if status is being updated
@@ -273,7 +369,7 @@ export class ComplaintsService {
         previousStatus,
         updateComplaintDto.status!,
         statusRemarks || `Status changed from ${previousStatus} to ${updateComplaintDto.status}`,
-        username,
+        officer.name,
         changes,
       );
     } else if (Object.keys(updateData).length > 0) {
@@ -285,21 +381,23 @@ export class ComplaintsService {
           complaint.status,
           complaint.status,
           `Complaint details updated`,
-          username,
+          officer.name,
           changes,
         );
       }
     }
 
-    return this.findOne(id);
+    return this.findOneInternal(id);
   }
 
   async updateStatus(
     id: string,
     updateStatusDto: UpdateStatusDto,
-    username?: string,
+    officer: Officer,
   ): Promise<Complaint> {
-    const complaint = await this.findOne(id);
+    const complaint = await this.findOneInternal(id);
+    this.assertOfficerCanAccess(complaint, officer);
+
     const previousStatus = complaint.status;
 
     if (previousStatus === updateStatusDto.status) {
@@ -318,25 +416,98 @@ export class ComplaintsService {
       updateStatusDto.status,
       updateStatusDto.remarks ||
         `Status changed from ${previousStatus} to ${updateStatusDto.status}`,
-      username,
+      officer.name,
     );
 
-    return this.findOne(id);
+    return this.findOneInternal(id);
   }
 
-  async remove(id: string): Promise<void> {
-    const complaint = await this.findOne(id);
+  async remove(id: string, officer: Officer): Promise<void> {
+    const complaint = await this.findOneInternal(id);
+    this.assertOfficerCanAccess(complaint, officer);
     await this.complaintRepository.remove(complaint);
   }
 
-  async getLogs(complaintId: string): Promise<ComplaintLog[]> {
-    // Verify complaint exists
-    await this.findOne(complaintId);
+  async getLogs(
+    complaintId: string,
+    officer: Officer,
+  ): Promise<ComplaintLog[]> {
+    const complaint = await this.findOneInternal(complaintId);
+    this.assertOfficerCanAccess(complaint, officer);
 
     return this.complaintLogRepository.find({
       where: { complaintId },
       order: { createdAt: 'DESC' },
     });
+  }
+
+  async getStatusCounts(
+    officer: Officer,
+  ): Promise<Record<ComplaintStatus, number>> {
+    const queryBuilder = this.complaintRepository
+      .createQueryBuilder('complaint')
+      .select('complaint.status', 'status')
+      .addSelect('COUNT(*)', 'count');
+
+    // this.applyRbacFilter(queryBuilder, officer);
+
+    const counts = await queryBuilder.groupBy('complaint.status').getRawMany();
+
+    const result = Object.values(ComplaintStatus).reduce(
+      (acc, status) => {
+        acc[status] = 0;
+        return acc;
+      },
+      {} as Record<ComplaintStatus, number>,
+    );
+
+    counts.forEach((item) => {
+      result[item.status as ComplaintStatus] = parseInt(item.count, 10);
+    });
+
+    return result;
+  }
+
+  async getStatistics(officer: Officer): Promise<{
+    totalCases: number;
+    pending: number;
+    resolved: number;
+    citizens: number;
+  }> {
+    const statusCounts = await this.getStatusCounts(officer);
+
+    const pending =
+      (statusCounts[ComplaintStatus.NEW] || 0) +
+      (statusCounts[ComplaintStatus.ASSIGNED] || 0) +
+      (statusCounts[ComplaintStatus.IN_PROGRESS] || 0);
+
+    const resolved =
+      (statusCounts[ComplaintStatus.RESOLVED] || 0) +
+      (statusCounts[ComplaintStatus.REJECTED] || 0) +
+      (statusCounts[ComplaintStatus.CLOSED] || 0);
+
+    const totalCases = pending + resolved;
+
+    return {
+      totalCases,
+      pending,
+      resolved,
+      citizens: 0, // Hardcoded for now
+    };
+  }
+
+  private async findOneInternal(id: string): Promise<Complaint> {
+    const complaint = await this.complaintRepository.findOne({
+      where: { id },
+      relations: ['logs'],
+      order: { logs: { createdAt: 'DESC' } },
+    });
+
+    if (!complaint) {
+      throw new NotFoundException(`Complaint with ID "${id}" not found`);
+    }
+
+    return complaint;
   }
 
   private async createLog(
@@ -374,56 +545,5 @@ export class ComplaintsService {
     return changedFields.length > 0
       ? `Updated fields: ${changedFields.join(', ')}`
       : '';
-  }
-
-  async getStatusCounts(): Promise<Record<ComplaintStatus, number>> {
-    const counts = await this.complaintRepository
-      .createQueryBuilder('complaint')
-      .select('complaint.status', 'status')
-      .addSelect('COUNT(*)', 'count')
-      .groupBy('complaint.status')
-      .getRawMany();
-
-    const result = Object.values(ComplaintStatus).reduce(
-      (acc, status) => {
-        acc[status] = 0;
-        return acc;
-      },
-      {} as Record<ComplaintStatus, number>,
-    );
-
-    counts.forEach((item) => {
-      result[item.status as ComplaintStatus] = parseInt(item.count, 10);
-    });
-
-    return result;
-  }
-
-  async getStatistics(): Promise<{
-    totalCases: number;
-    pending: number;
-    resolved: number;
-    citizens: number;
-  }> {
-    const statusCounts = await this.getStatusCounts();
-
-    const pending =
-      (statusCounts[ComplaintStatus.NEW] || 0) +
-      (statusCounts[ComplaintStatus.ASSIGNED] || 0) +
-      (statusCounts[ComplaintStatus.IN_PROGRESS] || 0);
-
-    const resolved =
-      (statusCounts[ComplaintStatus.RESOLVED] || 0) +
-      (statusCounts[ComplaintStatus.REJECTED] || 0) +
-      (statusCounts[ComplaintStatus.CLOSED] || 0);
-
-    const totalCases = pending + resolved;
-
-    return {
-      totalCases,
-      pending,
-      resolved,
-      citizens: 0, // Hardcoded for now
-    };
   }
 }

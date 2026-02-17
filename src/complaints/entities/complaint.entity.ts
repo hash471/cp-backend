@@ -8,6 +8,7 @@ import {
   BeforeInsert,
 } from 'typeorm';
 import { ComplaintStatus } from '../enums/complaint-status.enum';
+import { Gender } from '../enums/gender.enum';
 import { ComplaintLog } from './complaint-log.entity';
 
 @Entity('complaints')
@@ -21,14 +22,17 @@ export class Complaint {
   @Column({ nullable: true })
   language: string;
 
-  @Column()
+  @Column({ nullable: true })
   policeStation: string;
 
-  @Column()
+  @Column({ nullable: true })
   citizenName: string;
 
-  @Column()
+  @Column({ nullable: true })
   mobileNumber: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  gender: Gender;
 
   @Column({ nullable: true })
   aadharNumber: string;
@@ -45,10 +49,10 @@ export class Complaint {
   @Column({ nullable: true })
   pincode: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   locationOfIncident: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   complaintSummary: string;
 
   @Column({

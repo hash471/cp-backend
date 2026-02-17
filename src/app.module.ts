@@ -10,6 +10,8 @@ import { HealthModule } from './health/health.module';
 import { Complaint } from './complaints/entities/complaint.entity';
 import { ComplaintLog } from './complaints/entities/complaint-log.entity';
 import { PoliceStation } from './police-stations/entities/police-station.entity';
+import { Officer } from './officers/entities/officer.entity';
+import { OfficersModule } from './officers/officers.module';
 
 @Module({
   imports: [
@@ -27,7 +29,7 @@ import { PoliceStation } from './police-stations/entities/police-station.entity'
         username: configService.get<string>('DB_USERNAME', 'postgres'),
         password: configService.get<string>('DB_PASSWORD', 'postgres'),
         database: configService.get<string>('DB_DATABASE', 'complaints'),
-        entities: [Complaint, ComplaintLog, PoliceStation],
+        entities: [Complaint, ComplaintLog, PoliceStation, Officer],
         synchronize: configService.get<string>('NODE_ENV') !== 'production',
         logging: configService.get<string>('NODE_ENV') === 'development',
         ssl:
@@ -40,6 +42,7 @@ import { PoliceStation } from './police-stations/entities/police-station.entity'
     ComplaintsModule,
     PoliceStationsModule,
     HealthModule,
+    OfficersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
