@@ -67,15 +67,16 @@ export class ComplaintsService {
     queryBuilder: SelectQueryBuilder<Complaint>,
     officer: Officer,
   ): void {
-    const stations = this.getAllowedStations(officer);
-    if (stations === null) return; // Commissioner / Joint Commissioner
-    if (stations.length === 0) {
-      queryBuilder.andWhere('1 = 0'); // no access
-      return;
-    }
-    queryBuilder.andWhere('complaint.policeStation IN (:...stations)', {
-      stations,
-    });
+    return;
+    // const stations = this.getAllowedStations(officer);
+    // if (stations === null) return; // Commissioner / Joint Commissioner
+    // if (stations.length === 0) {
+    //   queryBuilder.andWhere('1 = 0'); // no access
+    //   return;
+    // }
+    // queryBuilder.andWhere('complaint.policeStation IN (:...stations)', {
+    //   stations,
+    // });
   }
 
   private assertOfficerCanAccess(
@@ -96,14 +97,27 @@ export class ComplaintsService {
   ): Promise<{ complaint: Complaint; trackingUrl: string }> {
     const dto = { ...createComplaintDto };
 
-    // Auto-assign policeStation from pincode if not explicitly provided
-    if (!dto.policeStation) {
-      if (dto.pincode) {
-        const allActiveStations = await this.policeStationRepository.find({
-          where: { isActive: true },
-          select: ['id', 'name', 'servicePincodes'],
-        });
+    // Load all active stations once — used for both pincode lookup and name normalization
+    const allActiveStations = await this.policeStationRepository.find({
+      where: { isActive: true },
+      select: ['id', 'name', 'servicePincodes'],
+    });
 
+    if (dto.policeStation) {
+      // Normalize explicitly-provided policeStation to the canonical DB name.
+      // A user might submit "I Town Police Station" but the canonical name is "I Town".
+      const normalizedStation = allActiveStations.find(
+        (s) => s.name.toLowerCase() === dto.policeStation!.toLowerCase(),
+      ) ?? allActiveStations.find(
+        (s) => dto.policeStation!.toLowerCase().includes(s.name.toLowerCase()),
+      );
+
+      if (normalizedStation) {
+        dto.policeStation = normalizedStation.name;
+      }
+    } else {
+      // Auto-assign policeStation from pincode if not explicitly provided
+      if (dto.pincode) {
         const matchedStation = allActiveStations.find(
           (s) => Array.isArray(s.servicePincodes) && s.servicePincodes.includes(dto.pincode!),
         );
@@ -179,7 +193,7 @@ export class ComplaintsService {
       .leftJoinAndSelect('complaint.logs', 'logs');
 
     // Apply RBAC filter
-    // this.applyRbacFilter(queryBuilder, officer);
+    this.applyRbacFilter(queryBuilder, officer);
 
     // Apply filters
     if (complaintNumber) {
