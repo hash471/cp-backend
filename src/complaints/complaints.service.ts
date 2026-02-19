@@ -39,6 +39,7 @@ export class ComplaintsService {
     private readonly configService: ConfigService,
   ) {}
 
+
   private getAllowedStations(officer: Officer): string[] | null {
     // Primary: use relations hierarchy if officer username is registered
     const relationsStations = getAccessibleStationsForOfficer(officer.username);
@@ -67,16 +68,34 @@ export class ComplaintsService {
     queryBuilder: SelectQueryBuilder<Complaint>,
     officer: Officer,
   ): void {
-    const stations = this.getAllowedStations(officer);
-    if (stations === null) return; // Commissioner / Joint Commissioner
-    if (stations.length === 0) {
-      queryBuilder.andWhere('1 = 0'); // no access
-      return;
-    }
-    queryBuilder.andWhere('complaint.policeStation IN (:...stations)', {
-      stations,
-    });
+    
+
+    // Join police station table (needed for zone & subdivision filtering)
+   queryBuilder.innerJoin(
+    'police_stations',
+    's',
+    'complaint.policeStation = s.name',
+  );
+
+  // Hierarchy order: Station → SubDivision → Zone
+  const hierarchy = [
+    { column: 'complaint.policeStation', value: officer.policeStation },
+    { column: 's.subDivision', value: officer.subDivision },
+    { column: 's.zone', value: officer.zone },
+  ];
+
+  // Pick first available level
+  const firstAvailableLevel = hierarchy.find(level => level.value);
+
+  // Apply only that filter
+  if (firstAvailableLevel) {
+    queryBuilder.andWhere(
+      `${firstAvailableLevel.column} = :rbacValue`,
+      { rbacValue: firstAvailableLevel.value },
+    );
   }
+
+   }
 
   private assertOfficerCanAccess(
     complaint: Complaint,
@@ -179,7 +198,8 @@ export class ComplaintsService {
       .leftJoinAndSelect('complaint.logs', 'logs');
 
     // Apply RBAC filter
-    // this.applyRbacFilter(queryBuilder, officer);
+    this.applyRbacFilter(queryBuilder, officer);
+   
 
     // Apply filters
     if (complaintNumber) {
@@ -589,3 +609,7 @@ export class ComplaintsService {
       : '';
   }
 }
+function getRawMany() {
+  throw new Error('Function not implemented.');
+}
+
