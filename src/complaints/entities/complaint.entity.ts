@@ -5,7 +5,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  BeforeInsert,
 } from 'typeorm';
 import { ComplaintStatus } from '../enums/complaint-status.enum';
 import { Gender } from '../enums/gender.enum';
@@ -79,11 +78,4 @@ export class Complaint {
   @OneToMany(() => ComplaintLog, (log) => log.complaint, { cascade: true })
   logs: ComplaintLog[];
 
-  @BeforeInsert()
-  generateComplaintNumber() {
-    const timestamp = Date.now().toString(36).toUpperCase();
-    const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-    const prefix = this.kioskNumber ? `${this.kioskNumber}-` : '';
-    this.complaintNumber = `${prefix}CP-${timestamp}-${random}`;
-  }
 }

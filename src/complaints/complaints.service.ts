@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Complaint } from './entities/complaint.entity';
 import { ComplaintLog } from './entities/complaint-log.entity';
+import { KioskSequence } from './entities/kiosk-sequence.entity';
 import { PoliceStation } from '../police-stations/entities/police-station.entity';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
 import { UpdateComplaintDto } from './dto/update-complaint.dto';
@@ -34,6 +35,8 @@ export class ComplaintsService {
     private readonly complaintRepository: Repository<Complaint>,
     @InjectRepository(ComplaintLog)
     private readonly complaintLogRepository: Repository<ComplaintLog>,
+    @InjectRepository(KioskSequence)
+    private readonly kioskSequenceRepository: Repository<KioskSequence>,
     @InjectRepository(PoliceStation)
     private readonly policeStationRepository: Repository<PoliceStation>,
     private readonly configService: ConfigService,
@@ -135,6 +138,7 @@ export class ComplaintsService {
     }
 
     const complaint = this.complaintRepository.create(dto);
+    complaint.complaintNumber = await this.generateComplaintNumber(dto.kioskNumber);
     const savedComplaint = await this.complaintRepository.save(complaint);
 
     // Create initial log entry
@@ -585,6 +589,32 @@ export class ComplaintsService {
     });
 
     return this.complaintLogRepository.save(log);
+  }
+
+  private async generateComplaintNumber(kioskNumber?: string): Promise<string> {
+    const today = new Date();
+    const dateStr = today.toISOString().slice(0, 10); // YYYY-MM-DD
+    const datePart = dateStr.replace(/-/g, ''); // YYYYMMDD
+    const kiosk = kioskNumber || 'GEN';
+
+    let sequence = await this.kioskSequenceRepository.findOne({
+      where: { kioskNumber: kiosk, date: dateStr },
+    });
+
+    if (sequence) {
+      sequence.currentNumber += 1;
+    } else {
+      sequence = this.kioskSequenceRepository.create({
+        kioskNumber: kiosk,
+        date: dateStr,
+        currentNumber: 1,
+      });
+    }
+
+    await this.kioskSequenceRepository.save(sequence);
+
+    const runNumber = String(sequence.currentNumber).padStart(4, '0');
+    return `VSP-${kiosk}-${datePart}${runNumber}`;
   }
 
   private getChangedFields(
