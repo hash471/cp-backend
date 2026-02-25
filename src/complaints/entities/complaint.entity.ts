@@ -83,6 +83,7 @@ export class Complaint {
   generateComplaintNumber() {
     const timestamp = Date.now().toString(36).toUpperCase();
     const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-    this.complaintNumber = `CP-${timestamp}-${random}`;
+    const prefix = this.kioskNumber ? `${this.kioskNumber}-` : '';
+    this.complaintNumber = `${prefix}CP-${timestamp}-${random}`;
   }
 }
