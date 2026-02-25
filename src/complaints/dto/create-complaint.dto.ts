@@ -115,6 +115,22 @@ export class CreateComplaintDto {
   complaintSummary?: string;
 
   @ApiPropertyOptional({
+    description: 'Kiosk number where the complaint was filed',
+    example: 'K-001',
+  })
+  @IsOptional()
+  @IsString()
+  kioskNumber?: string;
+
+  @ApiPropertyOptional({
+    description: 'Location of the kiosk where the complaint was filed',
+    example: 'City Mall, MG Road',
+  })
+  @IsOptional()
+  @IsString()
+  kioskLocation?: string;
+
+  @ApiPropertyOptional({
     description: 'Initial status of the complaint',
     enum: ComplaintStatus,
     default: ComplaintStatus.NEW,

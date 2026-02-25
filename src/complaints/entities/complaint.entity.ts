@@ -62,6 +62,12 @@ export class Complaint {
   status: ComplaintStatus;
 
   @Column({ nullable: true })
+  kioskNumber: string;
+
+  @Column({ nullable: true })
+  kioskLocation: string;
+
+  @Column({ nullable: true })
   firNumber: string;
 
   @CreateDateColumn()
