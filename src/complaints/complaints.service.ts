@@ -11,6 +11,7 @@ import { Complaint } from './entities/complaint.entity';
 import { ComplaintLog } from './entities/complaint-log.entity';
 import { KioskSequence } from './entities/kiosk-sequence.entity';
 import { PoliceStation } from '../police-stations/entities/police-station.entity';
+import { S3Service } from '../common/s3.service';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
 import { UpdateComplaintDto } from './dto/update-complaint.dto';
 import { FilterComplaintDto } from './dto/filter-complaint.dto';
@@ -40,6 +41,7 @@ export class ComplaintsService {
     @InjectRepository(PoliceStation)
     private readonly policeStationRepository: Repository<PoliceStation>,
     private readonly configService: ConfigService,
+    private readonly s3Service: S3Service,
   ) {}
 
   private getAllowedStations(officer: Officer): string[] | null {
@@ -331,9 +333,10 @@ export class ComplaintsService {
     queryBuilder.skip(skip).take(limitNum);
 
     const [data, total] = await queryBuilder.getManyAndCount();
+    const enrichedData = await this.enrichListWithPresignedUrls(data);
 
     return {
-      data,
+      data: enrichedData,
       total,
       page: pageNum,
       limit: limitNum,
@@ -344,7 +347,7 @@ export class ComplaintsService {
   async findOne(id: string, officer: Officer): Promise<Complaint> {
     const complaint = await this.findOneInternal(id);
     this.assertOfficerCanAccess(complaint, officer);
-    return complaint;
+    return this.enrichWithPresignedUrls(complaint);
   }
 
   async trackByComplaintNumber(complaintNumber: string) {
@@ -482,6 +485,40 @@ export class ComplaintsService {
     return this.findOneInternal(id);
   }
 
+  async uploadImages(
+    id: string,
+    files: Express.Multer.File[],
+  ): Promise<Complaint> {
+    const complaint = await this.findOneInternal(id);
+
+    const uploadPromises = files.map((file) =>
+      this.s3Service.uploadFile(file, `complaints/${complaint.complaintNumber}`),
+    );
+    const newUrls = await Promise.all(uploadPromises);
+
+    complaint.imageUrls = [...(complaint.imageUrls || []), ...newUrls];
+    await this.complaintRepository.save(complaint);
+
+    return this.findOneInternal(id);
+  }
+
+  async getImagePresignedUrls(
+    id: string,
+  ): Promise<{ key: string; url: string }[]> {
+    const complaint = await this.findOneInternal(id);
+
+    if (!complaint.imageUrls || complaint.imageUrls.length === 0) {
+      return [];
+    }
+
+    const urlPromises = complaint.imageUrls.map(async (key) => ({
+      key,
+      url: await this.s3Service.getPresignedUrl(key),
+    }));
+
+    return Promise.all(urlPromises);
+  }
+
   async remove(id: string, officer: Officer): Promise<void> {
     const complaint = await this.findOneInternal(id);
     this.assertOfficerCanAccess(complaint, officer);
@@ -499,6 +536,47 @@ export class ComplaintsService {
       where: { complaintId },
       order: { createdAt: 'DESC' },
     });
+  }
+
+  async getKioskSummary(officer: Officer): Promise<
+    {
+      kioskNumber: string;
+      kioskLocation: string;
+      totalComplaints: number;
+      closedWithFir: number;
+      closedWithoutFir: number;
+    }[]
+  > {
+    const queryBuilder = this.complaintRepository
+      .createQueryBuilder('complaint')
+      .select('complaint.kioskNumber', 'kioskNumber')
+      .addSelect('complaint.kioskLocation', 'kioskLocation')
+      .addSelect('COUNT(*)', 'totalComplaints')
+      .addSelect(
+        `SUM(CASE WHEN complaint.status = '${ComplaintStatus.CLOSED_WITH_FIR}' THEN 1 ELSE 0 END)`,
+        'closedWithFir',
+      )
+      .addSelect(
+        `SUM(CASE WHEN complaint.status = '${ComplaintStatus.CLOSED_WITHOUT_FIR}' THEN 1 ELSE 0 END)`,
+        'closedWithoutFir',
+      )
+      .where('complaint.kioskNumber IS NOT NULL');
+
+    this.applyRbacFilter(queryBuilder, officer);
+
+    const results = await queryBuilder
+      .groupBy('complaint.kioskNumber')
+      .addGroupBy('complaint.kioskLocation')
+      .orderBy('"totalComplaints"', 'DESC')
+      .getRawMany();
+
+    return results.map((row) => ({
+      kioskNumber: row.kioskNumber,
+      kioskLocation: row.kioskLocation || '',
+      totalComplaints: parseInt(row.totalComplaints, 10),
+      closedWithFir: parseInt(row.closedWithFir, 10),
+      closedWithoutFir: parseInt(row.closedWithoutFir, 10),
+    }));
   }
 
   async getStatusCounts(
@@ -557,6 +635,25 @@ export class ComplaintsService {
     };
   }
 
+  private async enrichWithPresignedUrls(complaint: Complaint): Promise<Complaint & { presignedImageUrls?: { key: string; url: string }[] }> {
+    if (!complaint.imageUrls || complaint.imageUrls.length === 0) {
+      return complaint;
+    }
+
+    const presignedImageUrls = await Promise.all(
+      complaint.imageUrls.map(async (key) => ({
+        key,
+        url: await this.s3Service.getPresignedUrl(key),
+      })),
+    );
+
+    return Object.assign(complaint, { presignedImageUrls });
+  }
+
+  private async enrichListWithPresignedUrls(complaints: Complaint[]): Promise<Complaint[]> {
+    return Promise.all(complaints.map((c) => this.enrichWithPresignedUrls(c)));
+  }
+
   private async findOneInternal(id: string): Promise<Complaint> {
     const complaint = await this.complaintRepository.findOne({
       where: { id },
@@ -568,7 +665,7 @@ export class ComplaintsService {
       throw new NotFoundException(`Complaint with ID "${id}" not found`);
     }
 
-    return complaint;
+    return this.enrichWithPresignedUrls(complaint);
   }
 
   private async createLog(

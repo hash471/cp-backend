@@ -8,11 +8,14 @@ import {
   Delete,
   Query,
   UseGuards,
+  UseInterceptors,
+  UploadedFiles,
   Req,
   ParseUUIDPipe,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiTags,
   ApiOperation,
@@ -20,6 +23,7 @@ import {
   ApiParam,
   ApiBasicAuth,
   ApiBearerAuth,
+  ApiConsumes,
 } from '@nestjs/swagger';
 import { ComplaintsService } from './complaints.service';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
@@ -132,6 +136,39 @@ export class ComplaintsController {
     return {
       success: true,
       data: statistics,
+    };
+  }
+
+  @Get('kiosk-summary')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
+  @ApiOperation({ summary: 'Get complaints grouped by kiosk number and location' })
+  @ApiResponse({
+    status: 200,
+    description: 'Kiosk summary retrieved successfully',
+    schema: {
+      example: {
+        success: true,
+        data: [
+          {
+            kioskNumber: 'K01',
+            kioskLocation: 'City Mall, MG Road',
+            totalComplaints: 25,
+            closedWithFir: 10,
+            closedWithoutFir: 5,
+          },
+        ],
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getKioskSummary(@Req() req: any) {
+    const summary = await this.complaintsService.getKioskSummary(
+      this.getOfficer(req),
+    );
+    return {
+      success: true,
+      data: summary,
     };
   }
 
@@ -294,6 +331,45 @@ export class ComplaintsController {
     return {
       success: true,
       data: logs,
+    };
+  }
+
+  @Get(':id/images')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
+  @ApiOperation({ summary: 'Get presigned URLs for complaint images' })
+  @ApiParam({ name: 'id', description: 'Complaint UUID' })
+  @ApiResponse({ status: 200, description: 'Presigned URLs generated successfully' })
+  @ApiResponse({ status: 404, description: 'Complaint not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async getImages(
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    const images = await this.complaintsService.getImagePresignedUrls(id);
+    return {
+      success: true,
+      data: images,
+    };
+  }
+
+  @Post(':id/images')
+  @UseGuards(Base64AuthGuard)
+  @ApiBasicAuth('basic')
+  @UseInterceptors(FilesInterceptor('images', 10))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Upload images for a complaint' })
+  @ApiParam({ name: 'id', description: 'Complaint UUID' })
+  @ApiResponse({ status: 201, description: 'Images uploaded successfully' })
+  @ApiResponse({ status: 404, description: 'Complaint not found' })
+  async uploadImages(
+    @Param('id', ParseUUIDPipe) id: string,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    const complaint = await this.complaintsService.uploadImages(id, files);
+    return {
+      success: true,
+      message: 'Images uploaded successfully',
+      data: complaint,
     };
   }
 

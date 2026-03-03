@@ -66,6 +66,9 @@ export class Complaint {
   @Column({ nullable: true })
   kioskLocation: string;
 
+  @Column({ type: 'simple-array', nullable: true })
+  imageUrls: string[];
+
   @Column({ nullable: true })
   firNumber: string;
 
