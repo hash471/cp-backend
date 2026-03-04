@@ -109,34 +109,19 @@ export class ComplaintsService {
       select: ['id', 'name', 'servicePincodes'],
     });
 
-    if (dto.policeStation) {
-      // Normalize explicitly-provided policeStation to the canonical DB name.
-      // A user might submit "I Town Police Station" but the canonical name is "I Town".
-      const normalizedStation = allActiveStations.find(
-        (s) => s.name.toLowerCase() === dto.policeStation!.toLowerCase(),
-      ) ?? allActiveStations.find(
-        (s) => dto.policeStation!.toLowerCase().includes(s.name.toLowerCase()),
+    // Always assign policeStation from pincode, ignoring any value in the payload
+    dto.policeStation = undefined;
+    if (dto.pincode) {
+      const matchedStation = allActiveStations.find(
+        (s) => Array.isArray(s.servicePincodes) && s.servicePincodes.includes(dto.pincode!),
       );
-
-      if (normalizedStation) {
-        dto.policeStation = normalizedStation.name;
+      if (matchedStation) {
+        dto.policeStation = matchedStation.name;
       }
-    } else {
-      // Auto-assign policeStation from pincode if not explicitly provided
-      if (dto.pincode) {
-        const matchedStation = allActiveStations.find(
-          (s) => Array.isArray(s.servicePincodes) && s.servicePincodes.includes(dto.pincode!),
-        );
+    }
 
-        if (matchedStation) {
-          dto.policeStation = matchedStation.name;
-        }
-      }
-
-      // No pincode provided, or pincode didn't match any station → MISCELLANEOUS
-      if (!dto.policeStation) {
-        dto.policeStation = MISCELLANEOUS_STATION;
-      }
+    if (!dto.policeStation) {
+      dto.policeStation = MISCELLANEOUS_STATION;
     }
 
     const complaint = this.complaintRepository.create(dto);
@@ -517,6 +502,38 @@ export class ComplaintsService {
     }));
 
     return Promise.all(urlPromises);
+  }
+
+  async assignStation(
+    id: string,
+    policeStation: string,
+    officer: Officer,
+  ): Promise<Complaint> {
+    const complaint = await this.findOneInternal(id);
+
+    // Validate that the station exists in the DB
+    const station = await this.policeStationRepository.findOne({
+      where: { name: policeStation, isActive: true },
+    });
+    if (!station) {
+      throw new BadRequestException(
+        `Police station "${policeStation}" not found or inactive`,
+      );
+    }
+
+    const previousStation = complaint.policeStation;
+    complaint.policeStation = station.name;
+    await this.complaintRepository.save(complaint);
+
+    await this.createLog(
+      id,
+      complaint.status,
+      complaint.status,
+      `Police station reassigned from "${previousStation}" to "${station.name}"`,
+      officer.name,
+    );
+
+    return this.findOneInternal(id);
   }
 
   async remove(id: string, officer: Officer): Promise<void> {

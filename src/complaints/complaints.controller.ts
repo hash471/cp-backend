@@ -30,6 +30,7 @@ import { CreateComplaintDto } from './dto/create-complaint.dto';
 import { UpdateComplaintDto } from './dto/update-complaint.dto';
 import { FilterComplaintDto } from './dto/filter-complaint.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
+import { AssignStationDto } from './dto/assign-station.dto';
 import { Base64AuthGuard } from '../auth/guards/base64-auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Officer } from '../officers/entities/officer.entity';
@@ -308,6 +309,32 @@ export class ComplaintsController {
     return {
       success: true,
       message: 'Status updated successfully',
+      data: complaint,
+    };
+  }
+
+  @Patch(':id/assign-station')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
+  @ApiOperation({ summary: 'Assign or reassign a police station to a complaint' })
+  @ApiParam({ name: 'id', description: 'Complaint UUID' })
+  @ApiResponse({ status: 200, description: 'Station assigned successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid station name' })
+  @ApiResponse({ status: 404, description: 'Complaint not found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async assignStation(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() assignStationDto: AssignStationDto,
+    @Req() req: any,
+  ) {
+    const complaint = await this.complaintsService.assignStation(
+      id,
+      assignStationDto.policeStation,
+      this.getOfficer(req),
+    );
+    return {
+      success: true,
+      message: 'Police station assigned successfully',
       data: complaint,
     };
   }
