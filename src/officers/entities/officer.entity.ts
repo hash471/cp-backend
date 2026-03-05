@@ -20,6 +20,9 @@ export class Officer {
   @Column({ unique: true })
   username: string;
 
+  @Column({ type: 'varchar', nullable: true, unique: true })
+  officerCode: string | null;
+
   @Column()
   mobileNumber: string;
 

@@ -7,7 +7,8 @@ export const officersSeedData: Partial<Officer>[] = [
   // === L&O Wing ===
   {
     name: "Dr. Shankhabrata Bagchi, IPS",
-    username: "COMM",
+    username: "9440627277",
+    officerCode: "COMM",
     mobileNumber: "9440627277",
     password: "9440627277",
     role: Role.COMMISSIONER,
@@ -16,7 +17,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.",
-    username: "JCP",
+    username: "9490624773",
+    officerCode: "JCP",
     mobileNumber: "9490624773",
     password: "9490624773",
     role: Role.JOINT_COMMISSIONER,
@@ -25,7 +27,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. V.N.Ch.Manikanta, IPS",
-    username: "DCP_ZONE1",
+    username: "9440904348",
+    officerCode: "DCP_ZONE1",
     mobileNumber: "9440904348",
     password: "9440904348",
     role: Role.DCP,
@@ -35,7 +38,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri . K.Laxmana Murthy",
-    username: "ACP_EAST",
+    username: "9440796005",
+    officerCode: "ACP_EAST",
     mobileNumber: "9440796005",
     password: "9440796005",
     role: Role.ACP,
@@ -46,7 +50,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. V.V.CM.Yerram Naidu",
-    username: "INSP_IITOWN",
+    username: "9440904716",
+    officerCode: "INSP_IITOWN",
     mobileNumber: "9440904716",
     password: "9440904716",
     role: Role.INSPECTOR,
@@ -58,7 +63,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.G.Divkar Yadav",
-    username: "INSP_MR-PETA",
+    username: "9440796010",
+    officerCode: "INSP_MR-PETA",
     mobileNumber: "9440796010",
     password: "9440796010",
     role: Role.INSPECTOR,
@@ -70,7 +76,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. P.Pydayya",
-    username: "INSP_IIITOWN",
+    username: "9440796011",
+    officerCode: "INSP_IIITOWN",
     mobileNumber: "9440796011",
     password: "9440796011",
     role: Role.INSPECTOR,
@@ -82,7 +89,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. CH.Umakanth",
-    username: "INSP_IVTOWN",
+    username: "9440796012",
+    officerCode: "INSP_IVTOWN",
     mobileNumber: "9440796012",
     password: "9440796012",
     role: Role.INSPECTOR,
@@ -94,7 +102,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. A.Narsimha Murthy",
-    username: "ACP_DWARAKA",
+    username: "8331041655",
+    officerCode: "ACP_DWARAKA",
     mobileNumber: "8331041655",
     password: "8331041655",
     role: Role.ACP,
@@ -105,7 +114,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. D.V.Ramana",
-    username: "INSP_DWARAKA",
+    username: "9440904332",
+    officerCode: "INSP_DWARAKA",
     mobileNumber: "9440904332",
     password: "9440904332",
     role: Role.INSPECTOR,
@@ -117,7 +127,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.K.N.S.V.Prasad",
-    username: "INSP_MVP",
+    username: "9490624746",
+    officerCode: "INSP_MVP",
     mobileNumber: "9490624746",
     password: "9490624746",
     role: Role.INSPECTOR,
@@ -129,7 +140,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.H.Malleswara Rao",
-    username: "INSP_ARILOVA",
+    username: "9490617918",
+    officerCode: "INSP_ARILOVA",
     mobileNumber: "9490617918",
     password: "9490617918",
     role: Role.INSPECTOR,
@@ -141,7 +153,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. S.Appalaraju",
-    username: "ACP_NORTH",
+    username: "9490623962",
+    officerCode: "ACP_NORTH",
     mobileNumber: "9490623962",
     password: "9490623962",
     role: Role.ACP,
@@ -152,7 +165,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri .G.Bala Krishna",
-    username: "INSP_PMPALEM",
+    username: "9440796060",
+    officerCode: "INSP_PMPALEM",
     mobileNumber: "9440796060",
     password: "9440796060",
     role: Role.INSPECTOR,
@@ -164,7 +178,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri B.Tirumala Rao",
-    username: "INSP_BHEEMILI",
+    username: "9440904712",
+    officerCode: "INSP_BHEEMILI",
     mobileNumber: "9440904712",
     password: "9440904712",
     role: Role.INSPECTOR,
@@ -176,7 +191,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. CH.Vasu Naidu",
-    username: "INSP_ANANDAPURAM",
+    username: "7382296908",
+    officerCode: "INSP_ANANDAPURAM",
     mobileNumber: "7382296908",
     password: "7382296908",
     role: Role.INSPECTOR,
@@ -188,7 +204,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri .CH.Sreedhar",
-    username: "INSP_PADMANABHAM",
+    username: "9490617920",
+    officerCode: "INSP_PADMANABHAM",
     mobileNumber: "9490617920",
     password: "9490617920",
     role: Role.INSPECTOR,
@@ -200,7 +217,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Smt. D.Mary Prasanthi, IPS",
-    username: "DCP_ZONE2",
+    username: "9491063502",
+    officerCode: "DCP_ZONE2",
     mobileNumber: "9491063502",
     password: "9491063502",
     role: Role.DCP,
@@ -210,7 +228,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.",
-    username: "ACP_HARBOUR",
+    username: "8331041669",
+    officerCode: "ACP_HARBOUR",
     mobileNumber: "8331041669",
     password: "8331041669",
     role: Role.ACP,
@@ -221,7 +240,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. CH.Simhadri Naidu",
-    username: "INSP_HARBOUR",
+    username: "9440796013",
+    officerCode: "INSP_HARBOUR",
     mobileNumber: "9440796013",
     password: "9440796013",
     role: Role.INSPECTOR,
@@ -233,7 +253,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. P.Vara Prasad",
-    username: "INSP_1TOWN",
+    username: "9440796019",
+    officerCode: "INSP_1TOWN",
     mobileNumber: "9440796019",
     password: "9440796019",
     role: Role.INSPECTOR,
@@ -245,7 +266,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. G.Apparao",
-    username: "INSP_MALKAPURAM",
+    username: "9440796023",
+    officerCode: "INSP_MALKAPURAM",
     mobileNumber: "9440796023",
     password: "9440796023",
     role: Role.INSPECTOR,
@@ -257,7 +279,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. T.Kameswara Rao",
-    username: "INSP_NEWPORT",
+    username: "9440904309",
+    officerCode: "INSP_NEWPORT",
     mobileNumber: "9440904309",
     password: "9440904309",
     role: Role.INSPECTOR,
@@ -269,7 +292,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. Y.Srinivasa Rao",
-    username: "ACP_SOUTH",
+    username: "9440796006",
+    officerCode: "ACP_SOUTH",
     mobileNumber: "9440796006",
     password: "9440796006",
     role: Role.ACP,
@@ -280,7 +304,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri A.Pardha Saradhi",
-    username: "INSP_GAJUWAKA",
+    username: "9440796014",
+    officerCode: "INSP_GAJUWAKA",
     mobileNumber: "9440796014",
     password: "9440796014",
     role: Role.INSPECTOR,
@@ -292,7 +317,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. K.Malleswara Rao",
-    username: "INSP_DUVVADA",
+    username: "9440796053",
+    officerCode: "INSP_DUVVADA",
     mobileNumber: "9440796053",
     password: "9440796053",
     role: Role.INSPECTOR,
@@ -304,7 +330,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri .E. Kesava Rao",
-    username: "INSP_STEELPLANT",
+    username: "9440796015",
+    officerCode: "INSP_STEELPLANT",
     mobileNumber: "9440796015",
     password: "9440796015",
     role: Role.INSPECTOR,
@@ -316,7 +343,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. Prudhvi Teja",
-    username: "ACP_WEST",
+    username: "9440796008",
+    officerCode: "ACP_WEST",
     mobileNumber: "9440796008",
     password: "9440796008",
     role: Role.ACP,
@@ -327,7 +355,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. K.Ravikumar",
-    username: "INSP_KANCHARAPALEM",
+    username: "9014214742",
+    officerCode: "INSP_KANCHARAPALEM",
     mobileNumber: "9014214742",
     password: "9014214742",
     role: Role.INSPECTOR,
@@ -339,7 +368,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.V.Sankar Narayana",
-    username: "INSP_AIRPORT",
+    username: "9440904350",
+    officerCode: "INSP_AIRPORT",
     mobileNumber: "9440904350",
     password: "9440904350",
     role: Role.INSPECTOR,
@@ -351,7 +381,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. L.Sanyasi Naidu",
-    username: "INSP_GOPALAPATNAM",
+    username: "9440796020",
+    officerCode: "INSP_GOPALAPATNAM",
     mobileNumber: "9440796020",
     password: "9440796020",
     role: Role.INSPECTOR,
@@ -363,7 +394,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. K.Venkat Satish Kumar",
-    username: "INSP_PENDURTHY",
+    username: "9440796039",
+    officerCode: "INSP_PENDURTHY",
     mobileNumber: "9440796039",
     password: "9440796039",
     role: Role.INSPECTOR,
@@ -377,7 +409,8 @@ export const officersSeedData: Partial<Officer>[] = [
   // === Crimes Wing ===
   {
     name: "Smt. K.Latha Madhuri",
-    username: "DCP_CRIMES",
+    username: "9490623981",
+    officerCode: "DCP_CRIMES",
     mobileNumber: "9490623981",
     password: "9490623981",
     role: Role.DCP,
@@ -386,7 +419,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.",
-    username: "ADCP_CRIMES",
+    username: "9490617923",
+    officerCode: "ADCP_CRIMES",
     mobileNumber: "9490617923",
     password: "9490617923",
     role: Role.DCP,
@@ -395,7 +429,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.",
-    username: "ACP_CRIMES1",
+    username: "9440904321",
+    officerCode: "ACP_CRIMES1",
     mobileNumber: "9440904321",
     password: "9440904321",
     role: Role.ACP,
@@ -405,7 +440,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.CH.Rajula Naidu",
-    username: "DCI_EAST",
+    username: "8331041656",
+    officerCode: "DCI_EAST",
     mobileNumber: "8331041656",
     password: "8331041656",
     role: Role.INSPECTOR,
@@ -417,7 +453,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.CH.Chiranjeevi Rao",
-    username: "DSI_IITOWN",
+    username: "8331041592",
+    officerCode: "DSI_IITOWN",
     mobileNumber: "8331041592",
     password: "8331041592",
     role: Role.SUB_INSPECTOR,
@@ -429,7 +466,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. K.Krishna",
-    username: "DSI_MR-PETA",
+    username: "9440904331",
+    officerCode: "DSI_MR-PETA",
     mobileNumber: "9440904331",
     password: "9440904331",
     role: Role.SUB_INSPECTOR,
@@ -441,7 +479,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. P.Sankar Rao",
-    username: "DSI_IIITOWN",
+    username: "7989242025",
+    officerCode: "DSI_IIITOWN",
     mobileNumber: "7989242025",
     password: "7989242025",
     role: Role.SUB_INSPECTOR,
@@ -453,7 +492,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. G.Ganapathi Rao",
-    username: "DSI_IVTOWN",
+    username: "7382296913",
+    officerCode: "DSI_IVTOWN",
     mobileNumber: "7382296913",
     password: "7382296913",
     role: Role.SUB_INSPECTOR,
@@ -465,7 +505,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. V.Chakradhar Rao",
-    username: "DCI_DWARAKA",
+    username: "9490624815",
+    officerCode: "DCI_DWARAKA",
     mobileNumber: "9490624815",
     password: "9490624815",
     role: Role.INSPECTOR,
@@ -477,7 +518,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. L.Srinivasa Rao",
-    username: "DSI_DWARAKA",
+    username: "8331041581",
+    officerCode: "DSI_DWARAKA",
     mobileNumber: "8331041581",
     password: "8331041581",
     role: Role.SUB_INSPECTOR,
@@ -489,7 +531,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. T.Ravi Kumar",
-    username: "DSI_MVP",
+    username: "8331041593",
+    officerCode: "DSI_MVP",
     mobileNumber: "8331041593",
     password: "8331041593",
     role: Role.SUB_INSPECTOR,
@@ -501,7 +544,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. A.Hari Krishna",
-    username: "DSI_ARILOVA",
+    username: "8331041604",
+    officerCode: "DSI_ARILOVA",
     mobileNumber: "8331041604",
     password: "8331041604",
     role: Role.SUB_INSPECTOR,
@@ -513,7 +557,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.B.Satya Siva Prakash",
-    username: "DCI_NORTH",
+    username: "8331041672",
+    officerCode: "DCI_NORTH",
     mobileNumber: "8331041672",
     password: "8331041672",
     role: Role.INSPECTOR,
@@ -525,7 +570,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. S.Surya Prakash",
-    username: "DSI_PMPALEM",
+    username: "9440904314",
+    officerCode: "DSI_PMPALEM",
     mobileNumber: "9440904314",
     password: "9440904314",
     role: Role.SUB_INSPECTOR,
@@ -537,7 +583,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. R.Srinivasu Rao",
-    username: "DSI_BHEEMILI",
+    username: "7382641999",
+    officerCode: "DSI_BHEEMILI",
     mobileNumber: "7382641999",
     password: "7382641999",
     role: Role.SUB_INSPECTOR,
@@ -549,7 +596,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. SK.Sharief",
-    username: "DSI_ANANDAPURAM",
+    username: "9490624727",
+    officerCode: "DSI_ANANDAPURAM",
     mobileNumber: "9490624727",
     password: "9490624727",
     role: Role.SUB_INSPECTOR,
@@ -561,7 +609,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. G.Venkata Rao",
-    username: "DSI_PADMANABHAM",
+    username: "8331041576",
+    officerCode: "DSI_PADMANABHAM",
     mobileNumber: "8331041576",
     password: "8331041576",
     role: Role.SUB_INSPECTOR,
@@ -573,7 +622,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.",
-    username: "ACP_CRIMES2",
+    username: "8333997010",
+    officerCode: "ACP_CRIMES2",
     mobileNumber: "8333997010",
     password: "8333997010",
     role: Role.ACP,
@@ -583,7 +633,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.G.Srinivas",
-    username: "DCI_HARBOUR",
+    username: "7382296918",
+    officerCode: "DCI_HARBOUR",
     mobileNumber: "7382296918",
     password: "7382296918",
     role: Role.INSPECTOR,
@@ -595,7 +646,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. P.Prasada Rao",
-    username: "DSI_HARBOUR",
+    username: "8331041578",
+    officerCode: "DSI_HARBOUR",
     mobileNumber: "8331041578",
     password: "8331041578",
     role: Role.SUB_INSPECTOR,
@@ -607,7 +659,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. P.D.B.Sankar",
-    username: "DSI_ITOWN",
+    username: "9440904310",
+    officerCode: "DSI_ITOWN",
     mobileNumber: "9440904310",
     password: "9440904310",
     role: Role.SUB_INSPECTOR,
@@ -619,7 +672,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. M.V.Ramana",
-    username: "DSI_MALKAPURAM",
+    username: "9440904329",
+    officerCode: "DSI_MALKAPURAM",
     mobileNumber: "9440904329",
     password: "9440904329",
     role: Role.SUB_INSPECTOR,
@@ -631,7 +685,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. T.Rukmangadara Rao",
-    username: "DSI_NEWPORT",
+    username: "8331041605",
+    officerCode: "DSI_NEWPORT",
     mobileNumber: "8331041605",
     password: "8331041605",
     role: Role.SUB_INSPECTOR,
@@ -643,7 +698,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.K.Srinivasa Rao",
-    username: "DCI_SOUTH",
+    username: "9490617922",
+    officerCode: "DCI_SOUTH",
     mobileNumber: "9490617922",
     password: "9490617922",
     role: Role.INSPECTOR,
@@ -655,7 +711,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. CH.Harikrishna",
-    username: "DSI_GAJUWAKA",
+    username: "9440904339",
+    officerCode: "DSI_GAJUWAKA",
     mobileNumber: "9440904339",
     password: "9440904339",
     role: Role.SUB_INSPECTOR,
@@ -667,7 +724,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. G.Sattibabu",
-    username: "DSI_DUVVADA",
+    username: "9703117526",
+    officerCode: "DSI_DUVVADA",
     mobileNumber: "9703117526",
     password: "9703117526",
     role: Role.SUB_INSPECTOR,
@@ -679,7 +737,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. Y.Sambhasiva Rao",
-    username: "DSI_STEELPLANT",
+    username: "9440904328",
+    officerCode: "DSI_STEELPLANT",
     mobileNumber: "9440904328",
     password: "9440904328",
     role: Role.SUB_INSPECTOR,
@@ -691,7 +750,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. M.Chandra Mouli",
-    username: "DCI_WEST",
+    username: "9440904717",
+    officerCode: "DCI_WEST",
     mobileNumber: "9440904717",
     password: "9440904717",
     role: Role.INSPECTOR,
@@ -703,7 +763,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "SK Abdul Maroff",
-    username: "DSI_KANCHARPALEM",
+    username: "8331041687",
+    officerCode: "DSI_KANCHARPALEM",
     mobileNumber: "8331041687",
     password: "8331041687",
     role: Role.SUB_INSPECTOR,
@@ -715,7 +776,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. K.Ravi Kishore",
-    username: "DSI_AIRPORT",
+    username: "9440904322",
+    officerCode: "DSI_AIRPORT",
     mobileNumber: "9440904322",
     password: "9440904322",
     role: Role.SUB_INSPECTOR,
@@ -727,7 +789,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. E.Tejaeswarao Rao",
-    username: "DSI_GOPALAPATNAM",
+    username: "9440904330",
+    officerCode: "DSI_GOPALAPATNAM",
     mobileNumber: "9440904330",
     password: "9440904330",
     role: Role.SUB_INSPECTOR,
@@ -739,7 +802,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. D.Suri Babu",
-    username: "DSI_PENDURTHY",
+    username: "8331041618",
+    officerCode: "DSI_PENDURTHY",
     mobileNumber: "8331041618",
     password: "8331041618",
     role: Role.SUB_INSPECTOR,
@@ -753,7 +817,8 @@ export const officersSeedData: Partial<Officer>[] = [
   // === Traffic Wing ===
   {
     name: "Sri. K.Praveen Kumar",
-    username: "DCP_TRAFFIC",
+    username: "9440796004",
+    officerCode: "DCP_TRAFFIC",
     mobileNumber: "9440796004",
     password: "9440796004",
     role: Role.DCP,
@@ -762,7 +827,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. S.Vasudev",
-    username: "ACP_TRAFFIC1",
+    username: "9490619450",
+    officerCode: "ACP_TRAFFIC1",
     mobileNumber: "9490619450",
     password: "9490619450",
     role: Role.ACP,
@@ -772,7 +838,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. M.Srinivasu",
-    username: "TI_DELTA1",
+    username: "9440796016",
+    officerCode: "TI_DELTA1",
     mobileNumber: "9440796016",
     password: "9440796016",
     role: Role.INSPECTOR,
@@ -784,7 +851,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri . N.Simhachalam",
-    username: "TSI_IITOWNTRAFFIC",
+    username: "9440796041",
+    officerCode: "TSI_IITOWNTRAFFIC",
     mobileNumber: "9440796041",
     password: "9440796041",
     role: Role.SUB_INSPECTOR,
@@ -796,7 +864,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. CH.Uma Maheswara Rao",
-    username: "TSI_MRPETATRAFFIC",
+    username: "9492027573",
+    officerCode: "TSI_MRPETATRAFFIC",
     mobileNumber: "9492027573",
     password: "9492027573",
     role: Role.SUB_INSPECTOR,
@@ -808,7 +877,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.S. Ammi Naidu",
-    username: "TI_DELTA2",
+    username: "7382296905",
+    officerCode: "TI_DELTA2",
     mobileNumber: "7382296905",
     password: "7382296905",
     role: Role.INSPECTOR,
@@ -820,7 +890,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. G.Dhanjaya Naidu",
-    username: "TSI_3TOWNTRAFFIC",
+    username: "9440796042",
+    officerCode: "TSI_3TOWNTRAFFIC",
     mobileNumber: "9440796042",
     password: "9440796042",
     role: Role.SUB_INSPECTOR,
@@ -832,7 +903,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. M.Sudharshan Rao",
-    username: "TSI_4THTOWNTRAFFIC",
+    username: "9440796043",
+    officerCode: "TSI_4THTOWNTRAFFIC",
     mobileNumber: "9440796043",
     password: "9440796043",
     role: Role.SUB_INSPECTOR,
@@ -844,7 +916,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.N.V.Prabhakara Rao",
-    username: "TI_DELTA9",
+    username: "9440904718",
+    officerCode: "TI_DELTA9",
     mobileNumber: "9440904718",
     password: "9440904718",
     role: Role.INSPECTOR,
@@ -856,7 +929,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. T.Ramarao -  RSI",
-    username: "TSI_DWARAKATRAFFIC",
+    username: "9441277516",
+    officerCode: "TSI_DWARAKATRAFFIC",
     mobileNumber: "9441277516",
     password: "9441277516",
     role: Role.SUB_INSPECTOR,
@@ -868,7 +942,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.S. Ramurthy",
-    username: "TSI_MVPTRAFFIC",
+    username: "8121115952",
+    officerCode: "TSI_MVPTRAFFIC",
     mobileNumber: "8121115952",
     password: "8121115952",
     role: Role.SUB_INSPECTOR,
@@ -880,7 +955,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. J. Dharmendhar",
-    username: "TSI_ARILOVATRAFFIC",
+    username: "8331041606",
+    officerCode: "TSI_ARILOVATRAFFIC",
     mobileNumber: "8331041606",
     password: "8331041606",
     role: Role.SUB_INSPECTOR,
@@ -892,7 +968,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.N.Sai",
-    username: "TI_DELTA8",
+    username: "9440904343",
+    officerCode: "TI_DELTA8",
     mobileNumber: "9440904343",
     password: "9440904343",
     role: Role.INSPECTOR,
@@ -904,7 +981,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. A.Manmadha Rao",
-    username: "TSI_PMPALEMTRAFFIC",
+    username: "9440904316",
+    officerCode: "TSI_PMPALEMTRAFFIC",
     mobileNumber: "9440904316",
     password: "9440904316",
     role: Role.SUB_INSPECTOR,
@@ -916,7 +994,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. Papa Rao",
-    username: "TSI_ANANDAPURAMTRAFFIC",
+    username: "8331041585",
+    officerCode: "TSI_ANANDAPURAMTRAFFIC",
     mobileNumber: "8331041585",
     password: "8331041585",
     role: Role.SUB_INSPECTOR,
@@ -928,7 +1007,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.B.Tirupathi Rao  RSI",
-    username: "TSI_BHEEMILITRAFFIC",
+    username: "8106062658",
+    officerCode: "TSI_BHEEMILITRAFFIC",
     mobileNumber: "8106062658",
     password: "8106062658",
     role: Role.SUB_INSPECTOR,
@@ -940,7 +1020,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.",
-    username: "ACP_TRAFFIC2",
+    username: "9440796007",
+    officerCode: "ACP_TRAFFIC2",
     mobileNumber: "9440796007",
     password: "9440796007",
     role: Role.ACP,
@@ -950,7 +1031,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.S. Shanmukha Rao",
-    username: "TI_DELTA5",
+    username: "9440796017",
+    officerCode: "TI_DELTA5",
     mobileNumber: "9440796017",
     password: "9440796017",
     role: Role.INSPECTOR,
@@ -962,7 +1044,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. G.Apparao",
-    username: "TSI_ITOWNTRAFFIC",
+    username: "9440796040",
+    officerCode: "TSI_ITOWNTRAFFIC",
     mobileNumber: "9440796040",
     password: "9440796040",
     role: Role.SUB_INSPECTOR,
@@ -974,7 +1057,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. G.Vijyakumar  RSI",
-    username: "TSI_HARBOURTRAFFIC",
+    username: "9440796049",
+    officerCode: "TSI_HARBOURTRAFFIC",
     mobileNumber: "9440796049",
     password: "9440796049",
     role: Role.SUB_INSPECTOR,
@@ -986,7 +1070,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. K.Srinivasu Rao",
-    username: "TSI_MALKAPURAMTRAFFIC",
+    username: "9440796045",
+    officerCode: "TSI_MALKAPURAMTRAFFIC",
     mobileNumber: "9440796045",
     password: "9440796045",
     role: Role.SUB_INSPECTOR,
@@ -998,7 +1083,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. K.Surya Narayana",
-    username: "TSI_NEWPORTTRAFFIC",
+    username: "9440904333",
+    officerCode: "TSI_NEWPORTTRAFFIC",
     mobileNumber: "9440904333",
     password: "9440904333",
     role: Role.SUB_INSPECTOR,
@@ -1010,7 +1096,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. SK.Hussian",
-    username: "TI_DELTA6",
+    username: "9440796018",
+    officerCode: "TI_DELTA6",
     mobileNumber: "9440796018",
     password: "9440796018",
     role: Role.INSPECTOR,
@@ -1022,7 +1109,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. M.Radha Krishna",
-    username: "TSI_GAJUWAKATRAFFIC",
+    username: "9440904334",
+    officerCode: "TSI_GAJUWAKATRAFFIC",
     mobileNumber: "9440904334",
     password: "9440904334",
     role: Role.SUB_INSPECTOR,
@@ -1034,7 +1122,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.K.Venkata Rao",
-    username: "TI_DELTA7",
+    username: "9440796048",
+    officerCode: "TI_DELTA7",
     mobileNumber: "9440796048",
     password: "9440796048",
     role: Role.INSPECTOR,
@@ -1046,7 +1135,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. S. Lingnna Dora",
-    username: "TSI_DUVVADATRAFFIC",
+    username: "9494147029",
+    officerCode: "TSI_DUVVADATRAFFIC",
     mobileNumber: "9494147029",
     password: "9494147029",
     role: Role.SUB_INSPECTOR,
@@ -1058,7 +1148,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. S.B.Sankara Rao",
-    username: "TSI_STEELPLANTTRAFFIC",
+    username: "9440904335",
+    officerCode: "TSI_STEELPLANTTRAFFIC",
     mobileNumber: "9440904335",
     password: "9440904335",
     role: Role.SUB_INSPECTOR,
@@ -1070,7 +1161,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.A.Dasradhi",
-    username: "TI_DELTA3",
+    username: "9440796037",
+    officerCode: "TI_DELTA3",
     mobileNumber: "9440796037",
     password: "9440796037",
     role: Role.INSPECTOR,
@@ -1082,7 +1174,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. SK.Kadharbhasha",
-    username: "TSI_KANCHARAPALEMTRAFFIC",
+    username: "9440796044",
+    officerCode: "TSI_KANCHARAPALEMTRAFFIC",
     mobileNumber: "9440796044",
     password: "9440796044",
     role: Role.SUB_INSPECTOR,
@@ -1094,7 +1187,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.K.Srinivasu Rao",
-    username: "TSI_AIRPORTTRAFFIC",
+    username: "9705503617",
+    officerCode: "TSI_AIRPORTTRAFFIC",
     mobileNumber: "9705503617",
     password: "9705503617",
     role: Role.SUB_INSPECTOR,
@@ -1106,7 +1200,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. K.Suresh",
-    username: "TI_DELTA4",
+    username: "9490617919",
+    officerCode: "TI_DELTA4",
     mobileNumber: "9490617919",
     password: "9490617919",
     role: Role.INSPECTOR,
@@ -1118,7 +1213,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri.D.Suribabu",
-    username: "TSI_GOPALAPATNAMTRAFFIC",
+    username: "9440796047",
+    officerCode: "TSI_GOPALAPATNAMTRAFFIC",
     mobileNumber: "9440796047",
     password: "9440796047",
     role: Role.SUB_INSPECTOR,
@@ -1130,7 +1226,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. P.Narsimha Murthy",
-    username: "TSI_PENDURTHYTRAFFIC",
+    username: "9440796064",
+    officerCode: "TSI_PENDURTHYTRAFFIC",
     mobileNumber: "9440796064",
     password: "9440796064",
     role: Role.SUB_INSPECTOR,
@@ -1144,7 +1241,8 @@ export const officersSeedData: Partial<Officer>[] = [
   // === Admin / Special Units ===
   {
     name: "Dr. V.B.Rajkamal",
-    username: "ADCP_ADMIN",
+    username: "9440796063",
+    officerCode: "ADCP_ADMIN",
     mobileNumber: "9440796063",
     password: "9440796063",
     role: Role.DCP,
@@ -1153,7 +1251,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. B.Srinivasa Rao",
-    username: "ADCP_CSB",
+    username: "9440796003",
+    officerCode: "ADCP_CSB",
     mobileNumber: "9440796003",
     password: "9440796003",
     role: Role.DCP,
@@ -1162,7 +1261,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. I.Chitti Babu",
-    username: "ACP_CSB",
+    username: "9440904336",
+    officerCode: "ACP_CSB",
     mobileNumber: "9440904336",
     password: "9440904336",
     role: Role.ACP,
@@ -1173,7 +1273,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. B.Narayana Rao",
-    username: "ADCP_CAR",
+    username: "9440796027",
+    officerCode: "ADCP_CAR",
     mobileNumber: "9440796027",
     password: "9440796027",
     role: Role.DCP,
@@ -1182,7 +1283,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. S.V.Apparao",
-    username: "ACP_CAR1",
+    username: "9440796009",
+    officerCode: "ACP_CAR1",
     mobileNumber: "9440796009",
     password: "9440796009",
     role: Role.ACP,
@@ -1193,7 +1295,8 @@ export const officersSeedData: Partial<Officer>[] = [
   },
   {
     name: "Sri. Z. Vijaya Kumar",
-    username: "ACP_CAR2",
+    username: "8331041647",
+    officerCode: "ACP_CAR2",
     mobileNumber: "8331041647",
     password: "8331041647",
     role: Role.ACP,

@@ -5,6 +5,9 @@ import { PoliceStation } from './entities/police-station.entity';
 import { CreatePoliceStationDto } from './dto/create-police-station.dto';
 import { UpdatePoliceStationDto } from './dto/update-police-station.dto';
 import { FilterPoliceStationDto } from './dto/filter-police-station.dto';
+import { Officer } from '../officers/entities/officer.entity';
+import { Role } from '../officers/enums/role.enum';
+import { getAccessibleStationsForOfficer } from '../officers/constants/relations.constant';
 
 @Injectable()
 export class PoliceStationsService {
@@ -22,7 +25,22 @@ export class PoliceStationsService {
     return this.policeStationRepository.save(policeStation);
   }
 
-  async findAll(filterDto: FilterPoliceStationDto): Promise<{
+  private getAllowedStationNames(officer: Officer): string[] | null {
+    if (officer.role === Role.COMMISSIONER || officer.role === Role.JOINT_COMMISSIONER) {
+      return null;
+    }
+    const code = officer.officerCode || officer.username;
+    const relationsStations = getAccessibleStationsForOfficer(code);
+    if (relationsStations !== null) {
+      return relationsStations;
+    }
+    if (officer.policeStation) {
+      return [officer.policeStation];
+    }
+    return [];
+  }
+
+  async findAll(filterDto: FilterPoliceStationDto, officer?: Officer): Promise<{
     data: PoliceStation[];
     total: number;
     page: number;
@@ -48,6 +66,17 @@ export class PoliceStationsService {
 
     const queryBuilder = this.policeStationRepository
       .createQueryBuilder('station');
+
+    if (officer) {
+      const allowed = this.getAllowedStationNames(officer);
+      if (allowed !== null) {
+        if (allowed.length === 0) {
+          queryBuilder.andWhere('1 = 0');
+        } else {
+          queryBuilder.andWhere('station.name IN (:...allowedNames)', { allowedNames: allowed });
+        }
+      }
+    }
 
     if (search) {
       queryBuilder.andWhere(
@@ -166,11 +195,24 @@ export class PoliceStationsService {
     await this.policeStationRepository.remove(station);
   }
 
-  async getActiveStations(): Promise<PoliceStation[]> {
-    return this.policeStationRepository.find({
-      where: { isActive: true },
-      order: { name: 'ASC' },
-    });
+  async getActiveStations(officer?: Officer): Promise<PoliceStation[]> {
+    const queryBuilder = this.policeStationRepository
+      .createQueryBuilder('station')
+      .where('station.isActive = :isActive', { isActive: true })
+      .orderBy('station.name', 'ASC');
+
+    if (officer) {
+      const allowed = this.getAllowedStationNames(officer);
+      if (allowed !== null) {
+        if (allowed.length === 0) {
+          queryBuilder.andWhere('1 = 0');
+        } else {
+          queryBuilder.andWhere('station.name IN (:...allowedNames)', { allowedNames: allowed });
+        }
+      }
+    }
+
+    return queryBuilder.getMany();
   }
 
   // Calculate distance between two coordinates (Haversine formula)

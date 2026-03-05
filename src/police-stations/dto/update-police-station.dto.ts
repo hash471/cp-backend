@@ -4,6 +4,8 @@ import {
   IsNumber,
   IsBoolean,
   IsEnum,
+  IsArray,
+  Matches,
   Min,
   Max,
 } from 'class-validator';
@@ -62,6 +64,12 @@ export class UpdatePoliceStationDto {
   @IsOptional()
   @IsEnum(SubDivision)
   subDivision?: SubDivision;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @Matches(/^[0-9]{6}$/, { each: true, message: 'Each pincode must be 6 digits' })
+  servicePincodes?: string[];
 
   @IsOptional()
   @IsBoolean()

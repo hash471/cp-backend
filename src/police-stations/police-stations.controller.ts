@@ -11,6 +11,7 @@ import {
   ParseUUIDPipe,
   HttpCode,
   HttpStatus,
+  Req,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -25,6 +26,7 @@ import { CreatePoliceStationDto } from './dto/create-police-station.dto';
 import { UpdatePoliceStationDto } from './dto/update-police-station.dto';
 import { FilterPoliceStationDto } from './dto/filter-police-station.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Officer } from '../officers/entities/officer.entity';
 
 @ApiTags('police-stations')
 @Controller('police-stations')
@@ -53,6 +55,8 @@ export class PoliceStationsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({
     summary: 'Get all police stations with filtering, search, sort, and pagination',
   })
@@ -60,8 +64,8 @@ export class PoliceStationsController {
     status: 200,
     description: 'List of police stations retrieved successfully',
   })
-  async findAll(@Query() filterDto: FilterPoliceStationDto) {
-    const result = await this.policeStationsService.findAll(filterDto);
+  async findAll(@Query() filterDto: FilterPoliceStationDto, @Req() req: any) {
+    const result = await this.policeStationsService.findAll(filterDto, req.user as Officer);
     return {
       success: true,
       ...result,
@@ -69,13 +73,15 @@ export class PoliceStationsController {
   }
 
   @Get('active')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get all active police stations' })
   @ApiResponse({
     status: 200,
     description: 'List of active police stations',
   })
-  async getActiveStations() {
-    const stations = await this.policeStationsService.getActiveStations();
+  async getActiveStations(@Req() req: any) {
+    const stations = await this.policeStationsService.getActiveStations(req.user as Officer);
     return {
       success: true,
       data: stations,

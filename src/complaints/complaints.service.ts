@@ -22,12 +22,16 @@ import { Role } from '../officers/enums/role.enum';
 import { getAccessibleStationsForOfficer } from '../officers/constants/relations.constant';
 
 const MISCELLANEOUS_STATION = 'MISCELLANEOUS';
-const MISCELLANEOUS_ROLES: Role[] = [
-  Role.COMMISSIONER,
-  Role.JOINT_COMMISSIONER,
-  Role.DCP,
-  Role.ACP,
-];
+
+/** Officer codes that can access MISCELLANEOUS complaints (Admin / Special Units) */
+const MISCELLANEOUS_OFFICER_CODES = new Set([
+  'ADCP_ADMIN',
+  'ADCP_CSB',
+  'ACP_CSB',
+  'ADCP_CAR',
+  'ACP_CAR1',
+  'ACP_CAR2',
+]);
 
 @Injectable()
 export class ComplaintsService {
@@ -45,12 +49,19 @@ export class ComplaintsService {
   ) {}
 
   private getAllowedStations(officer: Officer): string[] | null {
-    // Primary: use relations hierarchy if officer username is registered
-    const relationsStations = getAccessibleStationsForOfficer(officer.username);
+    // CP and JCP see everything
+    if (officer.role === Role.COMMISSIONER || officer.role === Role.JOINT_COMMISSIONER) {
+      return null;
+    }
+
+    // Primary: use relations hierarchy via officerCode (e.g. INSP_IITOWN)
+    const code = officer.officerCode || officer.username;
+    const relationsStations = getAccessibleStationsForOfficer(code);
 
     let stations: string[] | null;
     if (relationsStations !== null) {
-      stations = relationsStations.length > 0 ? relationsStations : null;
+      // Officer found in hierarchy — use the resolved stations (may be empty for admin-type nodes)
+      stations = relationsStations;
     } else if (officer.policeStation) {
       // Fallback: officer policeStation field (for SIs / leaf officers not in the map)
       stations = [officer.policeStation];
@@ -58,10 +69,9 @@ export class ComplaintsService {
       stations = []; // no access
     }
 
-    // COMM, JCP, DCP, ACP cadres can also see MISCELLANEOUS complaints.
-    // When stations === null the filter is skipped (full access), so MISCELLANEOUS
-    // is already visible; we only need to add it when a restricted list is returned.
-    if (stations !== null && MISCELLANEOUS_ROLES.includes(officer.role)) {
+    // Admin / Special Units officers can also see MISCELLANEOUS complaints.
+    // CP/JCP already have full access (stations === null), so only add for others.
+    if (stations !== null && MISCELLANEOUS_OFFICER_CODES.has(code)) {
       stations = [...stations, MISCELLANEOUS_STATION];
     }
 
@@ -72,30 +82,28 @@ export class ComplaintsService {
     queryBuilder: SelectQueryBuilder<Complaint>,
     officer: Officer,
   ): void {
-    return;
-    // const stations = this.getAllowedStations(officer);
-    // if (stations === null) return; // Commissioner / Joint Commissioner
-    // if (stations.length === 0) {
-    //   queryBuilder.andWhere('1 = 0'); // no access
-    //   return;
-    // }
-    // queryBuilder.andWhere('complaint.policeStation IN (:...stations)', {
-    //   stations,
-    // });
+    const stations = this.getAllowedStations(officer);
+    if (stations === null) return; // Commissioner / Joint Commissioner — full access
+    if (stations.length === 0) {
+      queryBuilder.andWhere('1 = 0'); // no access
+      return;
+    }
+    queryBuilder.andWhere('complaint.policeStation IN (:...stations)', {
+      stations,
+    });
   }
 
   private assertOfficerCanAccess(
     complaint: Complaint,
     officer: Officer,
   ): void {
-    return;
-    // const stations = this.getAllowedStations(officer);
-    // if (stations === null) return;
-    // if (!stations.includes(complaint.policeStation)) {
-    //   throw new ForbiddenException(
-    //     'You do not have access to this complaint',
-    //   );
-    // }
+    const stations = this.getAllowedStations(officer);
+    if (stations === null) return;
+    if (!stations.includes(complaint.policeStation)) {
+      throw new ForbiddenException(
+        'You do not have access to this complaint',
+      );
+    }
   }
 
   async create(
