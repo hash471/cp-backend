@@ -3,6 +3,7 @@ import { Zone } from '../enums/zone.enum';
 import { SubDivision } from '../enums/sub-division.enum';
 
 const RANK_PREFIX: Record<Role, string> = {
+  [Role.ADMIN]: 'ADMIN',
   [Role.COMMISSIONER]: 'COMM',
   [Role.JOINT_COMMISSIONER]: 'JCP',
   [Role.DCP]: 'DCP',
@@ -24,6 +25,7 @@ export function generateUsername(
   const prefix = RANK_PREFIX[role];
 
   switch (role) {
+    case Role.ADMIN:
     case Role.COMMISSIONER:
     case Role.JOINT_COMMISSIONER:
       return prefix;

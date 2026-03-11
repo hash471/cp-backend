@@ -49,8 +49,8 @@ export class ComplaintsService {
   ) {}
 
   private getAllowedStations(officer: Officer): string[] | null {
-    // CP and JCP see everything
-    if (officer.role === Role.COMMISSIONER || officer.role === Role.JOINT_COMMISSIONER) {
+    // ADMIN, CP and JCP see everything
+    if (officer.role === Role.ADMIN || officer.role === Role.COMMISSIONER || officer.role === Role.JOINT_COMMISSIONER) {
       return null;
     }
 

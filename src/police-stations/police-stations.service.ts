@@ -26,7 +26,7 @@ export class PoliceStationsService {
   }
 
   private getAllowedStationNames(officer: Officer): string[] | null {
-    if (officer.role === Role.COMMISSIONER || officer.role === Role.JOINT_COMMISSIONER) {
+    if (officer.role === Role.ADMIN || officer.role === Role.COMMISSIONER || officer.role === Role.JOINT_COMMISSIONER) {
       return null;
     }
     const code = officer.officerCode || officer.username;

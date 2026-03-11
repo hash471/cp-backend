@@ -72,8 +72,8 @@ export class AuthService {
     const { role: rRole, zone: rZone, subDivision: rSub, policeStation: rStation } = requester;
     const { role: tRole, zone: tZone, subDivision: tSub, policeStation: tStation } = target;
 
-    // Commissioner / Joint Commissioner → anyone
-    if (rRole === Role.COMMISSIONER || rRole === Role.JOINT_COMMISSIONER) {
+    // Admin / Commissioner / Joint Commissioner → anyone
+    if (rRole === Role.ADMIN || rRole === Role.COMMISSIONER || rRole === Role.JOINT_COMMISSIONER) {
       return;
     }
 

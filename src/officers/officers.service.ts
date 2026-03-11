@@ -62,6 +62,7 @@ export class OfficersService {
     const { role, zone, subDivision, policeStation, id } = requestingOfficer;
 
     switch (role) {
+      case Role.ADMIN:
       case Role.COMMISSIONER:
       case Role.JOINT_COMMISSIONER:
         // See all officers
