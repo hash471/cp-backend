@@ -1,13 +1,6 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiQuery,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
+import { Controller, Get, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { SecretariatsService } from './secretariats.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('secretariats')
 @Controller('secretariats')
@@ -38,8 +31,6 @@ export class SecretariatsController {
   }
 
   @Get('grouped-by-station')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth('bearer')
   @ApiOperation({
     summary: 'Get all police stations together with their associated secretariats',
   })
@@ -47,7 +38,6 @@ export class SecretariatsController {
     status: 200,
     description: 'Police stations with their secretariats retrieved successfully',
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findStationsWithSecretariats() {
     const data = await this.secretariatsService.findStationsWithSecretariats();
     return {
