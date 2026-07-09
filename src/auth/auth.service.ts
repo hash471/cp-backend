@@ -5,6 +5,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Officer } from '../officers/entities/officer.entity';
@@ -27,7 +28,7 @@ export class AuthService {
       where: { username: loginDto.username, isActive: true },
     });
 
-    if (!officer || officer.password !== loginDto.password) {
+    if (!officer || !(await bcrypt.compare(loginDto.password, officer.password))) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -61,7 +62,7 @@ export class AuthService {
       this.assertCanChangePassword(requestingOfficer, target);
     }
 
-    target.password = dto.newPassword;
+    target.password = await bcrypt.hash(dto.newPassword, 10);
     await this.officerRepository.save(target);
   }
 

@@ -27,6 +27,14 @@ export class CreateComplaintDto {
   policeStation?: string;
 
   @ApiPropertyOptional({
+    description: 'Secretariat (ward) the complaint belongs to',
+    example: 'MADHAVADHARA-01',
+  })
+  @IsOptional()
+  @IsString()
+  secretariat?: string;
+
+  @ApiPropertyOptional({
     description: 'Full name of the citizen filing the complaint',
     example: 'John Doe',
   })
@@ -105,6 +113,22 @@ export class CreateComplaintDto {
   @IsOptional()
   @IsString()
   locationOfIncident?: string;
+
+  @ApiPropertyOptional({
+    description: 'Subject / category of the complaint',
+    example: 'Theft',
+  })
+  @IsOptional()
+  @IsString()
+  subject?: string;
+
+  @ApiPropertyOptional({
+    description: 'Sub-subject / sub-category of the complaint',
+    example: 'Mobile Phone Theft',
+  })
+  @IsOptional()
+  @IsString()
+  subSubject?: string;
 
   @ApiPropertyOptional({
     description: 'Detailed summary of the complaint',

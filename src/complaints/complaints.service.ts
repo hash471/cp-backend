@@ -337,6 +337,41 @@ export class ComplaintsService {
     };
   }
 
+  /**
+   * Public, unauthenticated, paginated list of complaints.
+   * Returns the full complaint record except the Aadhaar number.
+   */
+  async findAllPublic(
+    page = 1,
+    limit = 10,
+  ): Promise<{
+    data: Partial<Complaint>[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
+    const pageNum = Math.max(1, Number(page));
+    const limitNum = Math.min(100, Math.max(1, Number(limit)));
+
+    const [data, total] = await this.complaintRepository.findAndCount({
+      order: { createdAt: 'DESC' },
+      skip: (pageNum - 1) * limitNum,
+      take: limitNum,
+    });
+
+    // Strip Aadhaar number from the public payload
+    const sanitized = data.map(({ aadharNumber, ...rest }) => rest);
+
+    return {
+      data: sanitized,
+      total,
+      page: pageNum,
+      limit: limitNum,
+      totalPages: Math.ceil(total / limitNum),
+    };
+  }
+
   async findOne(id: string, officer: Officer): Promise<Complaint> {
     const complaint = await this.findOneInternal(id);
     this.assertOfficerCanAccess(complaint, officer);
@@ -359,6 +394,8 @@ export class ComplaintsService {
       complaintNumber: complaint.complaintNumber,
       status: complaint.status,
       policeStation: complaint.policeStation,
+      subject: complaint.subject,
+      subSubject: complaint.subSubject,
       createdAt: complaint.createdAt,
       logs: (complaint.logs || [])
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())

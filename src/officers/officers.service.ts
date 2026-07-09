@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { Officer } from './entities/officer.entity';
 import { CreateOfficerDto } from './dto/create-officer.dto';
 import { UpdateOfficerDto } from './dto/update-officer.dto';
@@ -40,9 +41,11 @@ export class OfficersService {
       );
     }
 
+    const hashedPassword = await bcrypt.hash(createOfficerDto.password, 10);
     const officer = this.officerRepository.create({
       ...createOfficerDto,
       username,
+      password: hashedPassword,
     });
     return this.officerRepository.save(officer);
   }

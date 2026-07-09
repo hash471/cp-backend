@@ -4,8 +4,10 @@ import { PoliceStation } from '../../police-stations/entities/police-station.ent
 import { Complaint } from '../../complaints/entities/complaint.entity';
 import { ComplaintLog } from '../../complaints/entities/complaint-log.entity';
 import { Officer } from '../../officers/entities/officer.entity';
+import { Secretariat } from '../../secretariats/entities/secretariat.entity';
 import { policeStationsSeedData } from './police-stations.seed';
 import { officersSeedData } from './officers.seed';
+import { secretariatsSeedData } from './secretariats.seed';
 
 // Load environment variables
 config({ path: '.env.local' });
@@ -21,7 +23,7 @@ async function seed() {
     username: process.env.DB_USERNAME || 'postgres',
     password: process.env.DB_PASSWORD || 'postgres',
     database: process.env.DB_DATABASE || 'complaints',
-    entities: [PoliceStation, Complaint, ComplaintLog, Officer],
+    entities: [PoliceStation, Complaint, ComplaintLog, Officer, Secretariat],
     synchronize: true,
     ssl:
       process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
@@ -33,6 +35,7 @@ async function seed() {
 
     const policeStationRepo = dataSource.getRepository(PoliceStation);
     const officerRepo = dataSource.getRepository(Officer);
+    const secretariatRepo = dataSource.getRepository(Secretariat);
 
     const forceFlag = process.argv.includes('--force');
 
@@ -53,6 +56,7 @@ async function seed() {
 
     if (forceFlag && (existingStations > 0 || existingOfficers > 0)) {
       console.log('🗑️  Force flag detected. Clearing existing data...');
+      await secretariatRepo.clear();
       await officerRepo.clear();
       await policeStationRepo.clear();
       console.log('✅ Existing data cleared\n');
@@ -70,11 +74,18 @@ async function seed() {
     await officerRepo.save(officers);
     console.log(`✅ Inserted ${officers.length} officers\n`);
 
+    // Insert secretariats
+    console.log('🏛️  Seeding secretariats...');
+    const secretariats = secretariatRepo.create(secretariatsSeedData);
+    await secretariatRepo.save(secretariats);
+    console.log(`✅ Inserted ${secretariats.length} secretariats\n`);
+
     // Summary
     console.log('='.repeat(50));
     console.log('📊 Seeding Summary:');
     console.log(`   - Police Stations: ${policeStations.length}`);
     console.log(`   - Officers: ${officers.length}`);
+    console.log(`   - Secretariats: ${secretariats.length}`);
     console.log('='.repeat(50));
     console.log('\n🎉 Database seeding completed successfully!\n');
 

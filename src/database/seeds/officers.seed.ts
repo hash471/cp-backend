@@ -406,6 +406,32 @@ export const officersSeedData: Partial<Officer>[] = [
     isActive: true,
   },
 
+  // === Anakapalli District — Parawada Sub-Division ===
+  // (zone/subDivision are outside the VZG City enums; access is scoped by
+  //  policeStation via the RBAC fallback path.)
+  {
+    name: "Sri. K.V.Murali Krishna, IPS",
+    username: "9440796000",
+    officerCode: "INSP_PARAWADA",
+    mobileNumber: "9440796000",
+    password: "9440796000",
+    role: Role.INSPECTOR,
+    policeStation: "Parawada",
+    designation: "Superintendent of Police, Anakapalli",
+    isActive: true,
+  },
+  {
+    name: "Sri. B.Vijaya Bhaskar",
+    username: "9440796001",
+    officerCode: "INSP_SABBAVARAM",
+    mobileNumber: "9440796001",
+    password: "9440796001",
+    role: Role.INSPECTOR,
+    policeStation: "Sabbavaram",
+    designation: "Addl. Supdt. of Police (Admin), Anakapalli",
+    isActive: true,
+  },
+
   // === Crimes Wing ===
   {
     name: "Smt. K.Latha Madhuri",

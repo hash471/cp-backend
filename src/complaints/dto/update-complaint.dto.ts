@@ -18,6 +18,10 @@ export class UpdateComplaintDto {
 
   @IsOptional()
   @IsString()
+  secretariat?: string;
+
+  @IsOptional()
+  @IsString()
   citizenName?: string;
 
   @IsOptional()
@@ -51,6 +55,14 @@ export class UpdateComplaintDto {
   @IsOptional()
   @IsString()
   locationOfIncident?: string;
+
+  @IsOptional()
+  @IsString()
+  subject?: string;
+
+  @IsOptional()
+  @IsString()
+  subSubject?: string;
 
   @IsOptional()
   @IsString()

@@ -13,6 +13,8 @@ import { PoliceStation } from './police-stations/entities/police-station.entity'
 import { KioskSequence } from './complaints/entities/kiosk-sequence.entity';
 import { Officer } from './officers/entities/officer.entity';
 import { OfficersModule } from './officers/officers.module';
+import { Secretariat } from './secretariats/entities/secretariat.entity';
+import { SecretariatsModule } from './secretariats/secretariats.module';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { OfficersModule } from './officers/officers.module';
         username: configService.get<string>('DB_USERNAME', 'postgres'),
         password: configService.get<string>('DB_PASSWORD', 'postgres'),
         database: configService.get<string>('DB_DATABASE', 'complaints'),
-        entities: [Complaint, ComplaintLog, KioskSequence, PoliceStation, Officer],
+        entities: [Complaint, ComplaintLog, KioskSequence, PoliceStation, Officer, Secretariat],
         synchronize: configService.get<string>('NODE_ENV') !== 'production',
         logging: configService.get<string>('NODE_ENV') === 'development',
         ssl:
@@ -44,6 +46,7 @@ import { OfficersModule } from './officers/officers.module';
     PoliceStationsModule,
     HealthModule,
     OfficersModule,
+    SecretariatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

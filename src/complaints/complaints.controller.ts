@@ -21,6 +21,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiParam,
+  ApiQuery,
   ApiBasicAuth,
   ApiBearerAuth,
   ApiConsumes,
@@ -170,6 +171,27 @@ export class ComplaintsController {
     return {
       success: true,
       data: summary,
+    };
+  }
+
+  @Get('public')
+  @ApiOperation({
+    summary: 'Public paginated list of complaints (PII-safe projection, no auth)',
+  })
+  @ApiQuery({ name: 'page', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', required: false, example: 10 })
+  @ApiResponse({
+    status: 200,
+    description: 'Paginated list of complaints retrieved successfully',
+  })
+  async findAllPublic(
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    const result = await this.complaintsService.findAllPublic(page, limit);
+    return {
+      success: true,
+      ...result,
     };
   }
 

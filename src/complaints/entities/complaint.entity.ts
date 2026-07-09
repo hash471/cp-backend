@@ -25,6 +25,9 @@ export class Complaint {
   policeStation: string;
 
   @Column({ nullable: true })
+  secretariat: string;
+
+  @Column({ nullable: true })
   citizenName: string;
 
   @Column({ nullable: true })
@@ -50,6 +53,12 @@ export class Complaint {
 
   @Column({ type: 'text', nullable: true })
   locationOfIncident: string;
+
+  @Column({ nullable: true })
+  subject: string;
+
+  @Column({ nullable: true })
+  subSubject: string;
 
   @Column({ type: 'text', nullable: true })
   complaintSummary: string;

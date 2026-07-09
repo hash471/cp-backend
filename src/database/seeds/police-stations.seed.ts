@@ -395,6 +395,43 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
   },
 
   // ==========================================
+  // Stations added from the secretariat list (zone/subDivision TBD — fill in later)
+  // ==========================================
+  // NOTE: Parawada & Sabbavaram fall under Anakapalli District Police
+  // (Parawada Sub-Division), which is outside the Visakhapatnam City
+  // Zone/SubDivision enums — so zone/subDivision are left null here.
+  {
+    code: "VZG-PRW",
+    name: "Parawada",
+    address: "Parawada, Anakapalli",
+    district: 'Anakapalli',
+    city: 'Parawada',
+    state: 'Andhra Pradesh',
+    pincode: "531019",
+    phone: "9440796000",
+    type: StationType.LAW_AND_ORDER,
+    zone: null,
+    subDivision: null,
+    isActive: true,
+    servicePincodes: ["531019", "531020", "531021"],
+  },
+  {
+    code: "VZG-SBV",
+    name: "Sabbavaram",
+    address: "Sabbavaram, Anakapalli",
+    district: 'Anakapalli',
+    city: 'Sabbavaram',
+    state: 'Andhra Pradesh',
+    pincode: "531035",
+    phone: "9440796001",
+    type: StationType.LAW_AND_ORDER,
+    zone: null,
+    subDivision: null,
+    isActive: true,
+    servicePincodes: ["531035"],
+  },
+
+  // ==========================================
   // Traffic Police Stations (no servicePincodes — complaints go to L&O)
   // ==========================================
   // ZONE_1 → East Sub-Division
