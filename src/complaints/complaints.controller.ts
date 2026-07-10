@@ -35,6 +35,7 @@ import { AssignStationDto } from './dto/assign-station.dto';
 import { Base64AuthGuard } from '../auth/guards/base64-auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Officer } from '../officers/entities/officer.entity';
+import { COMPLAINT_SUBJECTS } from './data/complaint-subjects';
 
 @ApiTags('complaints')
 @Controller('complaints')
@@ -192,6 +193,22 @@ export class ComplaintsController {
     return {
       success: true,
       ...result,
+    };
+  }
+
+  @Get('subjects')
+  @ApiOperation({
+    summary: 'Get the Subject / Sub-Subject catalogue for complaints (public)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Subject catalogue retrieved successfully',
+  })
+  getSubjects() {
+    return {
+      success: true,
+      data: COMPLAINT_SUBJECTS,
+      total: COMPLAINT_SUBJECTS.length,
     };
   }
 
