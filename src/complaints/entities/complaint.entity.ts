@@ -60,6 +60,9 @@ export class Complaint {
   @Column({ nullable: true })
   subSubject: string;
 
+  @Column({ nullable: true })
+  subSubjectCode: string;
+
   @Column({ type: 'text', nullable: true })
   complaintSummary: string;
 

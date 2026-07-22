@@ -124,11 +124,19 @@ export class CreateComplaintDto {
 
   @ApiPropertyOptional({
     description: 'Sub-subject / sub-category of the complaint',
-    example: 'Mobile Phone Theft',
+    example: 'Vehicle Theft',
   })
   @IsOptional()
   @IsString()
   subSubject?: string;
+
+  @ApiPropertyOptional({
+    description: 'Official PGRS sub-subject code',
+    example: '251516894',
+  })
+  @IsOptional()
+  @IsString()
+  subSubjectCode?: string;
 
   @ApiPropertyOptional({
     description: 'Detailed summary of the complaint',

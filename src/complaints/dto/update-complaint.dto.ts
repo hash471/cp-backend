@@ -66,6 +66,10 @@ export class UpdateComplaintDto {
 
   @IsOptional()
   @IsString()
+  subSubjectCode?: string;
+
+  @IsOptional()
+  @IsString()
   complaintSummary?: string;
 
   @IsOptional()
