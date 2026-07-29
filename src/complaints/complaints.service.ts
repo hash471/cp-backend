@@ -117,19 +117,30 @@ export class ComplaintsService {
       select: ['id', 'name', 'servicePincodes'],
     });
 
-    // Always assign policeStation from pincode, ignoring any value in the payload
-    dto.policeStation = undefined;
-    if (dto.pincode) {
-      const matchedStation = allActiveStations.find(
-        (s) => Array.isArray(s.servicePincodes) && s.servicePincodes.includes(dto.pincode!),
+    const providedStation = dto.policeStation?.trim();
+    if (providedStation) {
+      // A police station was supplied in the payload — honour it instead of
+      // deriving one from the pincode. Normalize to the canonical station name
+      // when it matches a known active station (case-insensitive).
+      const matchedByName = allActiveStations.find(
+        (s) => s.name.toLowerCase() === providedStation.toLowerCase(),
       );
-      if (matchedStation) {
-        dto.policeStation = matchedStation.name;
+      dto.policeStation = matchedByName ? matchedByName.name : providedStation;
+    } else {
+      // No station supplied — derive it from the pincode's serviced station.
+      dto.policeStation = undefined;
+      if (dto.pincode) {
+        const matchedStation = allActiveStations.find(
+          (s) => Array.isArray(s.servicePincodes) && s.servicePincodes.includes(dto.pincode!),
+        );
+        if (matchedStation) {
+          dto.policeStation = matchedStation.name;
+        }
       }
-    }
 
-    if (!dto.policeStation) {
-      dto.policeStation = MISCELLANEOUS_STATION;
+      if (!dto.policeStation) {
+        dto.policeStation = MISCELLANEOUS_STATION;
+      }
     }
 
     const complaint = this.complaintRepository.create(dto);

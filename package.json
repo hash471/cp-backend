@@ -19,7 +19,13 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "seed": "ts-node -r tsconfig-paths/register src/database/seeds/seed.ts",
-    "seed:force": "ts-node -r tsconfig-paths/register src/database/seeds/seed.ts --force"
+    "seed:force": "ts-node -r tsconfig-paths/register src/database/seeds/seed.ts --force",
+    "stations:deactivate-empty": "ts-node -r tsconfig-paths/register src/database/scripts/deactivate-stations-without-secretariats.ts",
+    "stations:deactivate-empty:dry": "ts-node -r tsconfig-paths/register src/database/scripts/deactivate-stations-without-secretariats.ts --dry-run",
+    "stations:activate-required": "ts-node -r tsconfig-paths/register src/database/scripts/activate-required-stations.ts",
+    "stations:activate-required:dry": "ts-node -r tsconfig-paths/register src/database/scripts/activate-required-stations.ts --dry-run",
+    "stations:apply-codes": "ts-node -r tsconfig-paths/register src/database/scripts/apply-station-codes-and-renames.ts",
+    "stations:apply-codes:dry": "ts-node -r tsconfig-paths/register src/database/scripts/apply-station-codes-and-renames.ts --dry-run"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1000.0",

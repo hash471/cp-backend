@@ -7,9 +7,9 @@ export const ZONE_SUBDIVISIONS: Record<Zone, SubDivision[]> = {
 };
 
 export const SUBDIVISION_STATIONS: Record<SubDivision, string[]> = {
-  [SubDivision.EAST]: ['II Town', 'MR-Peta', 'III Town', 'IV Town'],
-  [SubDivision.DWARAKA]: ['Dwaraka', 'MVP', 'Arilova'],
-  [SubDivision.NORTH]: ['PM Palem', 'Bheemili', 'Anandapuram', 'Padmanabham'],
+  [SubDivision.EAST]: ['II Town', 'Maharanipeta', 'III Town', 'IV Town'],
+  [SubDivision.DWARAKA]: ['Dwaraka', 'Muvvalavanipalem', 'Arilova'],
+  [SubDivision.NORTH]: ['PM Palem', 'Bhimunipatnam', 'Anandapuram', 'Padmanabham'],
   [SubDivision.HARBOUR]: ['Harbour', 'I Town', 'Malkapuram', 'New Port'],
   [SubDivision.SOUTH]: ['Gajuwaka', 'Duvvada', 'Steel Plant'],
   [SubDivision.WEST]: ['Kancharapalem', 'Airport', 'Gopalapatnam', 'Pendurthy'],

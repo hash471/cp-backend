@@ -4,11 +4,8 @@ import { Secretariat } from '../../secretariats/entities/secretariat.entity';
  * Secretariats grouped by police station.
  *
  * Keys are the police station names as stored in the DB (police_stations.name).
- * The source list used a few alternate station names which have been normalized here:
- *   Maharanipeta      -> MR-Peta
- *   Dwaraka           -> Dwaraka Nagar
- *   Muvvalavanipalem  -> MVP
- *   Bhimunipatnam     -> Bheemili
+ * One name still differs from the common/display name:
+ *   Dwaraka -> Dwaraka Nagar
  * "Parawada" and "Sabbavaram" were not previously in the DB and are seeded as
  * police stations (see police-stations.seed.ts).
  */
@@ -42,7 +39,7 @@ export const secretariatsByStation: Record<string, string[]> = {
     'SAGARNAGAR-02', 'DAYALNAGAR-01', 'VIVEKANANDANAGAR-02', 'DAYALNAGAR-02',
     'RAMALAYAM',
   ],
-  Bheemili: [
+  Bhimunipatnam: [
     'AMANAM', 'ANNAVARAM', 'CHEPALUPPADA', 'CHIPPADA', 'DAKAMARRI',
     'J.V.AGRAHARAM', 'K.NAGARAPALEM-1', 'K.NAGARAPALEM-2', 'KAPULUPPPADA',
     'LAKSHMIPURAM', 'MAJJIPETA', 'MAJJIVALASA', 'MULAKUDDU', 'NIDIGATTU',
@@ -135,7 +132,7 @@ export const secretariatsByStation: Record<string, string[]> = {
     'SIDHARDHANAGAR', 'GAVARKANCHARAPALEM', 'RPPETA-01', 'RPPETA-02',
     'GNANAPURAM-01', 'GNANAPURAM-02', 'SUBASTAINCOLONY',
   ],
-  'MR-Peta': [
+  Maharanipeta: [
     'DASAPALLAHILLS', 'PANDHIMETTA', 'BHANOJINAGAR', 'CHANDAKAVEEDHI',
     'SRIRANGAPURAM', 'VENKATESWARANAGAR-01', 'DANDUBAZAR-01', 'DANDUBAZAR-02',
     'DANDUBAZAR-03', 'THADIVEEDHI', 'RELLIVEEDHI', 'VENKATESWARANAGAR-02',
@@ -150,7 +147,7 @@ export const secretariatsByStation: Record<string, string[]> = {
     'JALARIVEEDHI', 'TRINADHAPURAM', 'KRANTHINAGAR', 'ASRCOLONY', 'CHINTALOVA',
     'HARIJANAVEEDHI-02',
   ],
-  MVP: [
+  Muvvalavanipalem: [
     'LWASONSBAYCOLONY', 'MVPCOLONY-01', 'SIVAGANESHNAGAR', 'LAWSONSBAYCOLONY',
     'KAGITHALAVARIVEEDHI', 'GOLLAVEEDHI-01', 'MVPCOLONY-02', 'ADARSHNAGAR-01',
     'MVPCOLONY-03', 'MVPCOLONY-04', 'MVPSECTOR', 'NEWVENKOJIPALEM-01',

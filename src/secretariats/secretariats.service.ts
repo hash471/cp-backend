@@ -47,7 +47,10 @@ export class SecretariatsService {
     }>
   > {
     const [stations, secretariats] = await Promise.all([
-      this.policeStationRepository.find({ order: { name: 'ASC' } }),
+      this.policeStationRepository.find({
+        where: { isActive: true },
+        order: { name: 'ASC' },
+      }),
       this.secretariatRepository.find({ order: { name: 'ASC' } }),
     ]);
 

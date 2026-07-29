@@ -9,7 +9,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
   // ==========================================
   // ZONE_1 → East Sub-Division
   {
-    code: "VZG-02",
+    code: "2038002",
     name: "II Town",
     address: "Two Town, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -26,8 +26,8 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530001", "530002", "530003", "530004", "530011", "530016", "530017", "530020", "530027", "530045"],
   },
   {
-    code: "VZG-MRP",
-    name: "MR-Peta",
+    code: "2038091",
+    name: "Maharanipeta",
     address: "Maharanipeta, Visakhapatnam",
     district: 'Visakhapatnam',
     city: 'Visakhapatnam',
@@ -43,7 +43,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530001", "530002", "530003", "530016", "530045", "531077"],
   },
   {
-    code: "VZG-03",
+    code: "2038003",
     name: "III Town",
     address: "Three Town, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -60,7 +60,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530001", "530002", "530003", "530013", "530017", "530022", "530023", "530026"],
   },
   {
-    code: "VZG-04",
+    code: "2038004",
     name: "IV Town",
     address: "Four Town, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -79,7 +79,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
 
   // ZONE_1 → Dwaraka Sub-Division
   {
-    code: "VZG-DWK",
+    code: "2038076",
     name: "Dwaraka Nagar",
     address: "Dwaraka Nagar, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -96,8 +96,8 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530001", "530003", "530013", "530016", "530017", "535145"],
   },
   {
-    code: "VZG-MVP",
-    name: "MVP",
+    code: "2038092",
+    name: "Muvvalavanipalem",
     address: "MVP Colony, Visakhapatnam",
     district: 'Visakhapatnam',
     city: 'Visakhapatnam',
@@ -113,7 +113,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530013", "530017", "530022", "530040", "530043"],
   },
   {
-    code: "VZG-ARL",
+    code: "2038080",
     name: "Arilova",
     address: "Arilova, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -132,7 +132,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
 
   // ZONE_1 → North Sub-Division
   {
-    code: "VZG-PMD",
+    code: "2038017",
     name: "PM Palem",
     address: "PM Palem, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -149,8 +149,8 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530013", "530017", "530024", "530041", "530044", "530045", "530048"],
   },
   {
-    code: "VZG-BHM",
-    name: "Bheemili",
+    code: "2038009",
+    name: "Bhimunipatnam",
     address: "Bheemili, Visakhapatnam",
     district: 'Visakhapatnam',
     city: 'Visakhapatnam',
@@ -166,7 +166,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530048", "531162", "531163"],
   },
   {
-    code: "VZG-ANP",
+    code: "2038006",
     name: "Anandapuram",
     address: "Anandapuram, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -183,7 +183,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530048", "531162", "531163"],
   },
   {
-    code: "VZG-PDN",
+    code: "2038040",
     name: "Padmanabham",
     address: "Padmanabham, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -220,7 +220,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530001", "530004", "530005", "530012", "530026"],
   },
   {
-    code: "VZG-01",
+    code: "2038001",
     name: "I Town",
     address: "One Town, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -237,7 +237,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530001"],
   },
   {
-    code: "VZG-MLK",
+    code: "2038008",
     name: "Malkapuram",
     address: "Malkapuram, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -254,7 +254,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530005", "530011", "530012"],
   },
   {
-    code: "VZG-NPT",
+    code: "2038014",
     name: "New Port",
     address: "New Port Area, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -273,7 +273,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
 
   // ZONE_2 → South Sub-Division
   {
-    code: "VZG-GJW",
+    code: "2038010",
     name: "Gajuwaka",
     address: "Gajuwaka, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -290,7 +290,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530012", "530015", "530026"],
   },
   {
-    code: "VZG-DVD",
+    code: "2038075",
     name: "Duvvada",
     address: "Duvvada, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -326,7 +326,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
 
   // ZONE_2 → West Sub-Division
   {
-    code: "VZG-KND",
+    code: "2038042",
     name: "Kancharapalem",
     address: "Kancharapalem, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -343,7 +343,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530004", "530007", "530008", "530013", "530024"],
   },
   {
-    code: "VZG-AIR",
+    code: "2038072",
     name: "Airport",
     address: "Airport Road, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -360,7 +360,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530009", "530018"],
   },
   {
-    code: "VZG-GPL",
+    code: "2038018",
     name: "Gopalapatnam",
     address: "Gopalapatnam, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -377,7 +377,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["530027", "530028"],
   },
   {
-    code: "VZG-PND",
+    code: "2038035",
     name: "Pendurthy",
     address: "Pendurthi, Visakhapatnam",
     district: 'Visakhapatnam',
@@ -401,7 +401,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
   // (Parawada Sub-Division), which is outside the Visakhapatnam City
   // Zone/SubDivision enums — so zone/subDivision are left null here.
   {
-    code: "VZG-PRW",
+    code: "2038041",
     name: "Parawada",
     address: "Parawada, Anakapalli",
     district: 'Anakapalli',
@@ -416,7 +416,7 @@ export const policeStationsSeedData: Partial<PoliceStation>[] = [
     servicePincodes: ["531019", "531020", "531021"],
   },
   {
-    code: "VZG-SBV",
+    code: "2035012",
     name: "Sabbavaram",
     address: "Sabbavaram, Anakapalli",
     district: 'Anakapalli',

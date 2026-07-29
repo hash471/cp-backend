@@ -109,9 +109,10 @@ export class PoliceStationsService {
       });
     }
 
-    if (isActive !== undefined) {
-      queryBuilder.andWhere('station.isActive = :isActive', { isActive });
-    }
+    // Default to active-only; an explicit isActive=false can still request inactive stations.
+    queryBuilder.andWhere('station.isActive = :isActive', {
+      isActive: isActive === undefined ? true : isActive,
+    });
 
     // If coordinates provided, calculate distance and optionally filter by radius
     if (nearLatitude !== undefined && nearLongitude !== undefined) {
