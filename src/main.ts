@@ -54,6 +54,7 @@ async function bootstrap() {
     .addTag('police-stations', 'Police station management endpoints')
     .addTag('officers', 'Officer management endpoints')
     .addTag('secretariats', 'Secretariat lookup endpoints')
+    .addTag('external-call-logs', 'Outbound external API request/response logging')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
