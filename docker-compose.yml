@@ -44,6 +44,7 @@ services:
       JWT_SECRET: cp-backend-dev-secret-key
       JWT_EXPIRATION: 24h
       COMPLAINT_TRACKING_BASE_URL: https://25thcraft.com/complaints/track
+      EXTERNAL_LOG_SIGNATURE: ${EXTERNAL_LOG_SIGNATURE:-change-me-signature-secret}
     ports:
       - "3000:3000"
     healthcheck:
