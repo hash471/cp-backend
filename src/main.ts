@@ -48,6 +48,15 @@ async function bootstrap() {
       },
       'bearer',
     )
+    .addApiKey(
+      {
+        type: 'apiKey',
+        in: 'header',
+        name: 'x-signature',
+        description: 'Shared secret (EXTERNAL_LOG_SIGNATURE) for external-call-log endpoints',
+      },
+      'x-signature',
+    )
     .addTag('auth', 'Authentication endpoints')
     .addTag('health', 'Health check endpoints')
     .addTag('complaints', 'Complaint management endpoints')
